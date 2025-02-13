@@ -113,21 +113,21 @@ build_header () {
     # Title Line
 
     blank3=$((${int_pad_req_text}/2))
-    line3=$(padding ${frame} "#" ${grn}; padding ${side} "${pad_side}" ${none}; padding ${title_pad} "${pad_title}" ${none}; echo -ne "${ltcyn}${bold}${menu_title}${none}"; padding ${title_pad} "${pad_title}" ${none}; padding ${side} "${pad_side}" ${none}; padding ${frame} "#" ${grn})
+    line3=$(padding ${frame} "#" ${grn}; padding ${side} "${pad_side}" ${none}; padding ${title_pad} "${pad_title}" ${none}; echo -ne "${ltcyn}${menu_title}${none}"; padding ${title_pad} "${pad_title}" ${none}; padding ${side} "${pad_side}" ${none}; padding ${frame} "#" ${grn})
 
     line4=$(padding ${frame} "#" ${grn}; padding ${int_pad_req_empty} " " ${none}; padding ${frame} "#" ${grn})
 
     # Name Line
 
     blank5=$((${int_pad_req_text}/2))
-    line5=$(padding ${frame} "#" ${grn}; padding ${side} "${pad_side}" ${none}; padding ${name_pad} "${pad_name}" ${none}; echo -ne "${ylw}${italic}${menu_name}${none}"; padding ${name_pad} "${pad_name}" ${none}; padding ${side} "${pad_side}" ${none}; padding ${frame} "#" ${grn})
+    line5=$(padding ${frame} "#" ${grn}; padding ${side} "${pad_side}" ${none}; padding ${name_pad} "${pad_name}" ${none}; echo -ne "${ylw}${menu_name}${none}"; padding ${name_pad} "${pad_name}" ${none}; padding ${side} "${pad_side}" ${none}; padding ${frame} "#" ${grn})
 
     line6=$(padding ${frame} "#" ${grn}; padding ${int_pad_req_empty} " " ${none}; padding ${frame} "#" ${grn})
 
     # Item Line
 
     blank7=$((${int_pad_req_text}/2))
-    line7=$(padding ${item_pad} "${pad_item}" ${none}; echo -ne "${ltred}${menu_item}${none}"; padding ${item_pad} "${pad_item}" ${none})
+    line7=$(padding ${item_pad} "${pad_item}" ${none}; echo -ne "${red}${menu_item}${none}"; padding ${item_pad} "${pad_item}" ${none})
     line7=$(padding ${frame} "#" ${grn}; padding ${blank7} "${pad_side}" ${none}; echo -ne "${line7}"; padding ${blank7} "${pad_side}" ${none}; padding ${frame} "#" ${grn})
 
 
