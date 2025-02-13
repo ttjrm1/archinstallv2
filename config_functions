@@ -121,6 +121,7 @@ configure_chroot () {
     sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
 
     exit
+
     EOF
 
     chmod +x /mnt/install/config.sh
