@@ -21,6 +21,6 @@ take_post_install_snaphot () {
    sudo snapper -v -c root create -t single -d "Post Clean Install Snapshot"
 }
 
-pacman -Syy
+sudo pacman -Syy
 install_paru
 intstall_snap_pac_grub
