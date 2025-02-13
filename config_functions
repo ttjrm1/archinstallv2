@@ -22,7 +22,7 @@ configure_base () {
     ##
     sed -i 's/#COMPRESSION="zstd"/COMPRESSION="zstd"/g' /mnt/etc/mkinitcpio.conf
     sed -i 's/^MODULES=.*/MODULES=(btrfs)/g' /mnt/etc/mkinitcpio.conf
-    sed -i 's/^HOOKS=.*/HOOKS=(systemd autodetect microcode modconf consolefont numlock keymap keyboard sd-vconsole block)/g' /mnt/etc/mkinitcpio.conf
+    sed -i 's/^HOOKS=.*/HOOKS=(systemd autodetect microcode modconf consolefont keymap keyboard sd-vconsole block)/g' /mnt/etc/mkinitcpio.conf
 
     ##
     ## Configure /etc/hots file
