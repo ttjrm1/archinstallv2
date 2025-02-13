@@ -108,7 +108,7 @@ configure_chroot () {
     chmod 750 /.snapshots
 
     # Configure snapper root config for cleanups
-    sed -i 's/QGROUP=""/QGROUP="1/0"/g' /etc/snapper/configs/root
+    sed -i 's@QGROUP=""@QGROUP="1/0"@g' /etc/snapper/configs/root
     sed -i 's/NUMBER_LIMIT="50"/NUMBER_LIMIT="10-35"/g' /etc/snapper/configs/root
     sed -i 's/NUMBER_LIMIT_IMPORTANT="50"/NUMBER_LIMIT_IMPORTANT="15-25"/g' /etc/snapper/configs/root
     sed -i 's/TIMELINE_LIMIT_HOURLY="10"/TIMELINE_LIMIT_HOURLY="5"/g' /etc/snapper/configs/root
