@@ -17,10 +17,10 @@ partition () {
 
     lsblk -oNAME,SIZE,PARTLABEL,MOUNTPOINT
 
-    printf "\n${ylw}Please choose between the following:"
-    printf "\n${org}1.${none} Disk by Name"
-    printf "\n${org}2.${none} Disk by Label"
-    printf "\n${org}3.${none} Return to the Main Menu\n"
+    printf "\n${ltred}Please choose between the following:"
+    printf "\n${ltred}1.${none} Disk by Name"
+    printf "\n${ltred}2.${none} Disk by Label"
+    printf "\n${ltred}3.${none} Return to the Main Menu\n"
 
     echo ""
     read -p "Choice: " choice
