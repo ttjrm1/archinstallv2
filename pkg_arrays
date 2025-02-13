@@ -2,7 +2,7 @@
 basepkgs=(
     base
     base-devel
-    dev-tools
+    devtools
     intel-ucode
     linux
     linux-headers
