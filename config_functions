@@ -117,8 +117,7 @@ configure_chroot () {
     sed -i 's/TIMELINE_LIMIT_YEARLY="10"/TIMELINE_LIMIT_YEARLY="0"/g' /etc/snapper/configs/root
 
     # Enable the Multilib repo
-    sed -i 's/#[multilib]/[multilib]/g' /etc/pacman.conf
-    sed -i 's/#Include = /etc/pacman.d/mirrorlist /Include = /etc/pacman.d/mirrorlist/g' /etc/pacman.conf
+    sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
 
     exit" > /mnt/install/config.sh
 
