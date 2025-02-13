@@ -127,7 +127,7 @@ func_inst_ind () {
     funcid=$!
     func=$1
     while [ -d /proc/$funcid ]; do
-        printf "\rThe install function '${ltblu}${func}${none}' is .... ${ltred}${italic}${blink}Running${none}"
+        printf "\rThe install function '${ltblu}${func}${none}' is .... ${ltred}${italic}Running${none}"
     done
     tput el1
     printf "\rThe install function '${ltblu}$1${none}' is .... ${grn}COMPLETE${none}\n"
@@ -172,7 +172,7 @@ pkg_inst_ind () {
     funcid=$!
     pkgname=$1
     while [[ -d /proc/$funcid ]] ; do
-        printf "\r\tInstallation of '${ltblu}${pkgname}${none}' is ... ${ltred}${italic}${blink}Running${none}"
+        printf "\r\tInstallation of '${ltblu}${pkgname}${none}' is ... ${ltred}${italic}Running${none}"
     done
     tput el1
     printf "\r\tInstallation of '${ltblu}${pkgname}${none}' is ... ${grn}COMPLETE${none}\n"
