@@ -1,0 +1,56 @@
+##
+## Primary Function Calls
+##
+
+# Esure the install medium is up to date and has the necessary packeages installed
+
+sys_prep () {
+    clear
+    printf "\n${grn}Please wait whilst the necessary packages are installed,"
+    printf "\nand the repositories are refreshed......................${none}"
+    sys_update > /dev/null 2>&1
+}
+
+# Call the filesystem creation function
+
+run_initial () {
+    current_completed=0
+    current_task_tot=$1
+
+    draw_prog_bars "Create Filesystems" $current_completed $current_task_tot $completed $total_num_tasks
+
+    for i in "${fs_create[@]}" ; do
+        func_inst_ind $i "Create Filesystems"
+    done
+
+    draw_prog_bars "Create Filesystems" $current_completed $current_task_tot $completed $total_num_tasks
+    sleep 1
+}
+
+# Call final system configuration
+
+run_final_inst () {
+    current_completed=0
+    current_task_tot=$1
+
+    draw_prog_bars "Create New System 'fstab'" $current_completed $current_task_tot $completed $total_num_tasks
+
+    for i in "${fs_final[@]}" ; do
+        func_inst_ind $i "Create New System 'fstab'"
+    done
+
+    draw_prog_bars "Create New System 'fstab'" $current_completed $current_task_tot $completed $total_num_tasks
+}
+
+run_config () {
+    current_completed=0
+    current_task_tot=$1
+
+    draw_prog_bars "Final System Configuration" $current_completed $current_task_tot $completed $total_num_tasks
+
+    for i in "${config[@]}" ; do
+        func_inst_ind $i "Final System Configiguration"
+    done
+
+    draw_prog_bars "Final System Configuration" $current_completed $current_task_tot $completed $total_num_tasks
+}

@@ -1,0 +1,184 @@
+##
+## Script User Input Functions
+##
+
+# Total number of user input functions
+
+usr_input_tot=6
+
+# Set Partitions
+
+partition () {
+    printf "\n${ylw}Please select the required partitions:${none}\n\n"
+
+    if [ "${part_done}" == "${grn}COMPLETE${none}" ]; then
+        printf "\n${cyn}Current partition choices: ${none} ${part_usr}\n\n"
+    fi
+
+    lsblk -oNAME,SIZE,PARTLABEL,MOUNTPOINT
+
+    printf "\n${ylw}Please choose between the following:"
+    printf "\n${org}1.${none} Disk by Name"
+    printf "\n${org}2.${none} Disk by Label"
+    printf "\n${org}3.${none} Return to the Main Menu\n"
+
+    echo ""
+    read -p "Choice: " choice
+    case $choice in
+        1)
+            dev="/dev"
+            read -e -p "$(echo -e "${ylw}Please enter the EFI partition: ${none}")" part_efi
+            read -e -p "$(echo -e "${ylw}Please enter the ROOT partition: ${none}")" part_root
+            read -e -p "$(echo -e "${ylw}Please enter the VM partition: ${none}")" part_vm
+            ;;
+        2)
+            dev="/dev/disk/by-partlabel"
+            read -e -p "$(echo -e "${ylw}Please enter the EFI partition: ${none}")" part_efi
+            read -e -p "$(echo -e "${ylw}Please enter the ROOT partition: ${none}")" part_root
+            read -e -p "$(echo -e "${ylw}Please enter the VM partition: ${none}")" part_vm
+            ;;
+        3)
+            clear
+            draw_hdr
+            main_menu
+            ;;
+        *)
+            printf "\n${red}Please make a valid choice!${none}"
+            sleep 2
+            menu_item="Choose Partitions"
+            draw_hdr
+            partition
+            ;;
+    esac
+
+    ESP=${dev}/${part_efi}
+    BTRFS=${dev}/${part_root}
+    VM=${dev}/${part_vm}
+
+    if [ -z $part_efi} ] || [ -z ${part_root} ]; then
+        part_done="${red}NOT COMPLETE${none}"
+    else
+        if [ -z "${part_done}" ] || [ "${part_done}" == "${red}NOT COMPLETE${none}" ]; then
+            usr=$((usr+1))
+            completed=$((completed+1))
+        fi
+        part_done="${grn}COMPLETE${none}"
+    fi
+    if [ -z $part_vm ]; then
+        part_usr="(${ltblu}ESP: ${mag}${ESP}${ltblu}, Root: ${mag}${BTRFS}${none})"
+    else
+        part_usr="(${ltblu}ESP: ${mag}${ESP}${ltblu}, Root: ${mag}${BTRFS}${ltblu}, VMs: ${mag}${VM}${none})"
+    fi
+}
+
+# Set the computer Hostname
+
+hostname () {
+    read -e -p "$(echo -e "${ylw}Please enter the computer Hostname: ${none}")" hostname
+    if [ -z "${hostname}" ]; then
+        printf "\n${red}Please enter a valid Hostname ..."
+        sleep 2
+        menu_item="(Computer) Hostname"
+        draw_hdr
+        set_scroll
+        hostname
+    fi
+
+    host_done="${grn}COMPLETE${none}"
+    host_usr="(${ltblu}Hostname: ${mag}${hostname}${none})"
+    usr=$((usr+1))
+    completed=$((completed+1))
+}
+
+# Set the computer Domain
+
+domain () {
+    read -e -p "$(echo -e "${ylw}Please enter the computer Domain: ${none}")" domain
+
+    if [ -z "${domain}" ]; then
+        printf "\n${red}Please enter a valid Domain ..."
+        menu_item="(Computer) Domain"
+        draw_hdr
+        set_scroll
+        domain
+    fi
+
+    domain_done="${grn}COMPLETE${none}"
+
+    domain_usr="(${ltblu}Domain: ${mag}${domain}${none})"
+    usr=$((usr+1))
+    completed=$((completed+1))
+}
+
+# Set the new user Full Name
+
+fullname () {
+    read -e -p "$(echo -e "${ylw}Please enter the new user Full Name: ${none}")" fullname
+
+    if [ -z "${fullname}" ]; then
+        printf "\n${red}Please enter a user Full Name ..."
+        menu_item="(New User) Full Name"
+        draw_hdr
+        set_scroll
+        hostname
+    fi
+
+    fullname_done="${grn}COMPLETE${none}"
+
+    fullname_usr="(${ltblu}Full Name: ${mag}${fullname}${none})"
+    usr=$((usr+1))
+    completed=$((completed+1))
+}
+
+# Set the new user's Username
+
+username_set () {
+    if [ -z "${fullname}}" ]; then
+        printf "\n${red} You must enter a valid 'Full Name' first!${none}"
+        sleep 2
+        main_menu
+    fi
+    read -e -p "$(echo -e "${ylw}Please enter a Username for ${cyn}${fullname}${ylw}: ${none}")" username
+
+    if [ -z "${username}" ]; then
+        printf "\n${red}Please enter a valid Username ..."
+        sleep 2
+        menu_item="(New User) Username"
+        draw_hdr
+        set_scroll
+        username_set
+    fi
+
+    username_done="${grn}COMPLETE${none}"
+
+    username_usr="(${ltblu}Username: ${mag}${username}${none})"
+    usr=$((usr+1))
+    completed=$((completed+1))
+}
+
+# Set the new user's Password
+
+set_user_password () {
+    if [ -z "${username}" ]; then
+        printf "\n${red} You must enter a valid 'Username' first!${none}"
+        sleep 2
+        main_menu
+    fi
+
+    read -e -sp "$(echo -e "${ylw}Please enter a password for ${cyn}${fullname}${ylw} (${cyn}${username}${ylw}): ${none}")" password1
+    read -e -sp "$(echo -e "${ylw}Please re-enter the password for ${cyn}${fullname}${ylw} (${cyn}${username}${ylw}): ${none}")" password2
+
+    if [ "${password1}" != "${password2}" ]; then
+        printf "\n${red}The passwords do not match.${none}"
+        sleep 2
+        menu_item=$(echo -n "(${fullname}) Password")
+        draw_hdr
+        set_scroll
+        set_user_password
+    fi
+
+    password_done="${grn}COMPLETE${none}"
+
+    usr=$((usr+1))
+    completed=$((completed+1))
+}

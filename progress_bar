@@ -1,0 +1,90 @@
+##
+## Progres bar functions
+##
+draw_segments () {
+    draw=$(printf "$3%-$1s" "$2")
+    echo -ne "${draw// /$2}"
+}
+
+draw_prog_bars () {
+    label1="$1"
+    label2="Total Script Progress"
+
+    local a=$(echo -n "${label1}" | wc -c)
+    local b=$(echo -n "${label2}" | wc -c)
+    if [[ a < b ]]; then
+        label_len=$b
+        label1=$(printf "%-${label_len}s" "${label1}")
+    else
+        label_len=$a
+        label2=$(printf "%-${label_len}s" "${label2}")
+    fi
+
+    task_label=$(echo -n "$label1: ")
+    total_label=$(echo -n "$label2: ")
+    label_len=$(echo -n "$task_label" | wc -c)
+
+    tput sc
+    tput cup $(($(tput lines)-5)) 0
+    tput ed
+    ln=$(printf "${mag}%-$(tput cols)s${none}" "-")
+    echo "${ln// /-}"
+
+    # Information Line
+
+    info=$(echo -e "${cyn}##### Script Progress Bar #####${none}")
+    info_chars=$(echo -n "${info}" | wc -c)
+    centre ${screen_width} ${info_chars} "${info}"
+
+    # Current Task Progress line
+
+    percentage $2 $3
+    bar_segments ${pct} ${label_len} ${ylw}
+    echo "${task_label}${prog_bar}"
+
+    # Total Script Progress Line
+
+    percentage $4 $5
+    bar_segments ${pct} ${label_len} ${grn}
+    echo "${total_label}${prog_bar}"
+
+    tput rc
+}
+
+percentage () {
+    local task_comp=$1
+    local task_tot=$2
+
+    # Account for counting from zero
+
+    if [ "$1" = "0" ] ; then
+        pct=0
+        pct_label=$(printf "%5s" "0.0")
+        pct_label=$(echo -n " ( ${pct_label}% )")
+    else
+        pct=$(echo "scale=2;(${task_comp}/${task_tot}) * 100" | bc -l)
+        pct=$(printf '%.*f' 1 $pct)
+        pct_label=$(printf "%5s"  ${pct})
+        pct_label=$(echo -n " ( ${pct_label}% )")
+    fi
+
+    pct_label_len=$(echo -n "${pct_label}" | wc -c)
+}
+
+bar_segments () {
+
+    bar_length=$((${screen_width}-${label_len}-${pct_label_len}-5))
+
+    bar_completed=$(echo "scale=2;(${bar_length}*$1) / 100" | bc -l )
+    bar_completed=$(printf '%.*f' 1 ${bar_completed})
+
+    bar_remaining=$(echo "scale=2;(${bar_length}*(100-$1)) / 100" | bc -l )
+    bar_remaining=$(printf '%.*f' 1 ${bar_remaining})
+
+    comp_prog_bar=$( draw_segments ${bar_completed} "#" $3)
+    rem_prog_bar=$( draw_segments ${bar_remaining} "." ${none} )
+
+    prog_bar=$( echo -ne "["; echo -ne "${comp_prog_bar}"; echo -ne "${rem_prog_bar}"; echo -ne "]"; echo -ne "${pct_label}")
+}
+
+

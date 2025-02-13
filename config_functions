@@ -1,0 +1,157 @@
+##
+## Installed system Configuration Functions
+##
+
+configure_base () {
+    ##
+    ## Configure hostname, locale & keyboard
+    ##
+
+    # Hostname
+    echo "$hostname" > /mnt/etc/hostname
+
+    # locale
+    echo "$locale.UTF-8 UTF-8"  > /mnt/etc/locale.gen
+    echo "LANG=$locale.UTF-8" > /mnt/etc/locale.conf
+
+    # Keyboard
+    echo "KEYMAP=$kblayout" > /mnt/etc/vconsole.conf
+
+    ##
+    ## Configure /etc/mkinitcpio.conf for ZSTD compression
+    ##
+    sed -i 's/#COMPRESSION="zstd"/COMPRESSION="zstd"/g' /mnt/etc/mkinitcpio.conf
+    sed -i 's/^MODULES=.*/MODULES=(btrfs)/g' /mnt/etc/mkinitcpio.conf
+    sed -i 's/^HOOKS=.*/HOOKS=(systemd autodetect microcode modconf consolefont numlock keymap keyboard sd-vconsole block)/g' /mnt/etc/mkinitcpio.conf
+
+    ##
+    ## Configure /etc/hots file
+    ##
+    echo '
+    # Loopback entries; do not change.
+    # For historical reasons, localhost precedes localhost.localdomain:
+    127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+    ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+    127.0.1.1   $hostname.$domain $hostname
+    # See hosts(5) for proper format and other examples:
+    # 192.168.1.10 foo.example.org foo
+    # 192.168.1.13 bar.example.org bar' > /mnt/etc/hosts
+
+    ##
+    ## Configure grub defaults
+    ##
+
+    # Do not preload part_msdos
+    sed -i 's/ part_msdos//g' /mnt/etc/default/grub
+
+    # Booting from a BTRFS subvolume
+    echo '
+    # Booting with BTRFS subvolume
+    GRUB_BTRFS_OVERRIDE_BOOT_PARTITION_DETECTION=true' >> /mnt/etc/default/grub
+
+    ## Disable root subvol pinning
+    ## This is **extremely** important, as snapper expects to be able to set the default btrfs subvol
+    sed -i 's/rootflags=subvol=${rootsubvol}//g' /mnt/etc/grub.d/10_linux
+    sed -i 's/rootflags=subvol=${rootsubvol}//g' /mnt/etc/grub.d/20_linux_xen
+
+    ##
+    ## Configure the new system
+    ##
+
+    # Update reflector
+    echo "Start reflector..."
+    reflector -c "United Kingdom," -p https -a 3 --sort rate -- save /mnt/etc/pacman.d/mirrorlist
+}
+
+configure_chroot () {
+    mkdir /mnt/install
+
+    # Create configure file to run from within chroot
+    echo "#!/bin/bash
+
+    # Setting up timezone
+    # Temporarily hardcoding here
+
+    ln -sf /usr/share/zoneinfo/$zoneinfo /etc/localtime
+
+    # Setting up clock
+    hwclock --systohc
+
+    # Generating locales
+    locale-gen
+
+    # Generating a new initramfs
+    # chmod 600 /boot/initramfs-linux*
+    mkinitcpio -P
+
+    # Installing GRUB
+    grub-install --target=x86_64-efi --efi-directory=/efi --bootloader-id=Arch_GRUB --disable-shim-lock --modules='normalinstall paru inside arch-chroot environment test efi_gop efi_uga search echo linux all_video gfxmenu gfxterm_menu gfxterm loadenv configfile gzio part_gpt btrfs'
+
+    # Creating grub config file
+    grub-mkconfig -o /boot/grub/grub.cfg
+
+    # Adding user with sudo privilege
+    useradd -c '"$fullname"' -m "$username"
+    usermod -aG wheel "$username"
+
+    ## Give wheel user sudo access.
+    sed -i 's/# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/g' /etc/sudoers
+
+    # Snapper configuration
+    umount /.snapshots
+    rm -r /.snapshots
+    snapper --no-dbus -c root create-config /
+    btrfs subvolume delete /.snapshots
+    mkdir /.snapshots
+    mount -a
+    chmod 750 /.snapshots
+
+    # Configure snapper root config for cleanups
+    sed -i 's/'QGROUP=""/QGROUP="1/0"/g' /etc/snapper/configs/root
+    sed -i 's/'NUMBER_LIMIT="50"/NUMBER_LIMIT="10-35"/g' /etc/snapper/configs/root
+    sed -i 's/'NUMBER_LIMIT_IMPORTANT="50"/NUMBER_LIMIT_IMPORTANT="15-25"/g' /etc/snapper/configs/root
+    sed -i 's/'TIMELINE_LIMIT_HOURLY="10"/TIMELINE_LIMIT_HOURLY="5"/g' /etc/snapper/configs/root
+    sed -i 's/'TIMELINE_LIMIT_DAILY="10"/TIMELINE_LIMIT_DAILY="5"/g' /etc/snapper/configs/root
+    sed -i 's/'TIMELINE_LIMIT_WEEKLY="0"/TIMELINE_LIMIT_WEEKLY="2"/g' /etc/snapper/configs/root
+    sed -i 's/'TIMELINE_LIMIT_MONTHLY="10"/TIMELINE_LIMIT_MONTHLY="3"/g' /etc/snapper/configs/root
+    sed -i 's/'TIMELINE_LIMIT_YEARLY="10"/TIMELINE_LIMIT_YEARLY="0"/g' /etc/snapper/configs/root
+
+    exit" > /mnt/install/config.sh
+
+    chmod +x /mnt/install/config.sh
+
+    # Enter chroot and run above script
+    arch-chroot /mnt ./install/config.sh
+}
+
+set_password () {
+    # Set Passwords for root and $username
+    [ -n "$username" ] && echo "Setting user password for ${username}." && echo -e "${password1}\n${password1}" | arch-chroot /mnt passwd "$username"
+}
+
+configure_services () {
+    # Permit root login via ssh
+    echo "
+    PermitRootLogin yes" >> /mnt/etc/ssh/sshd_config
+
+    ##
+    ## Enable Services
+    ##
+    #systemctl enable acpid --root=/mnt
+    #systemctl enable avahi-daemon --root=/mnt
+    #systemctl enable bluetooth --root=/mnt
+    #systemctl enable cups --root=/mnt
+    #systemctl enable firewalld --root=/mnt
+    systemctl enable fstrim.timer --root=/mnt
+    systemctl enable grub-btrfsd --root=/mnt
+    systemctl enable snapper-timeline.timer --root=/mnt
+    systemctl enable snapper-cleanup.timer --root=/mnt
+    systemctl enable NetworkManager --root=/mnt
+    systemctl enable reflector --root=/mnt
+    systemctl enable sshd --root=/mnt
+}
+
+copy_post_install () {
+    mkdir /mnt/home/$username
+    cp ./2-post_install.sh /mnt/home/$username
+}

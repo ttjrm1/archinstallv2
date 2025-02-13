@@ -1,0 +1,29 @@
+##
+## Script Colours
+##
+# Forground
+blu="\e[34m"
+grn="\e[32m"
+ylw="\e[33m"
+cyn="\e[36m"
+red="\e[31m"
+mag="\e[35m"
+ltblu="\e[94m"
+ltgrn="\e[92m"
+ltylw="\e[93m"
+ltcyn="\e[96m"
+ltred="\e[91m"
+ltmag="\e[95m"
+
+##
+## Script Text Effects
+##
+bold="\e[1m"
+dim="\e[2m"
+italic="\e[3m"
+under="\e[4m"
+blink="\e[5m"
+strike="\e[9m"
+
+# Rest Colours and Effect
+none="\e[0m"

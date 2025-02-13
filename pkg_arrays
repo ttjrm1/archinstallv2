@@ -1,0 +1,147 @@
+# Base
+basepkgs=(
+    base
+    base-devel
+    dev-tools
+    intel-ucode
+    linux
+    linux-headers
+    linux-firmware
+    lzop
+    sudo
+    xz
+)
+
+basepkgs_tot=$(echo -n "${basepkgs[@]}" | wc -w)
+
+# Boot
+bootpkgs=(
+  grub
+  grub-btrfs
+  os-prober
+  efibootmgr
+)
+
+bootpkgs_tot=$(echo -n "${bootpkgs[@]}" | wc -w)
+
+# Files
+filepkgs=(
+  acpi
+  acpi_call
+  acpid
+  avahi
+  bash-completion
+  btrfs-progs
+  dosfstools
+  duf
+  git
+  gvfs
+  gvfs-smb
+  inotify-tools
+  mtools
+  nano
+  nfs-utils
+  ntfs-3g
+  openssh
+  reflector
+  rsync
+  unzip
+  zip
+)
+
+filepkgs_tot=$(echo -n "${filepkgs[@]}" | wc -w)
+
+# Snap
+snappkgs=(
+  snapper
+  snap-pac
+)
+
+snappkgs_tot=$(echo -n "${snappkgs[@]}" | wc -w)
+
+# Man
+manpkgs=(
+  man-db
+  man-pages
+  texinfo
+)
+
+manpkgs_tot=$(echo -n "${manpkgs[@]}" | wc -w)
+
+# Xdg
+xdgpkgs=(
+  xdg-desktop-portal-wlr
+  xdg-user-dirs
+  xdg-utils
+)
+
+xdgpkgs_tot=$(echo -n "${xdgpkgs[@]}" | wc -w)
+
+# Net
+netpkgs=(
+  bluez
+  bluez-utils
+  dialog
+  dnsutils
+  firewalld
+  inetutils
+  networkmanager
+  network-manager-applet
+  openbsd-netcat
+  wpa_supplicant
+)
+
+netpkgs_tot=$(echo -n "${netpkgs[@]}" | wc -w)
+
+# Sound
+sndpkgs=(
+  alsa-utils
+  pipewire
+  pipewire-alsa
+  pipewire-jack 
+  pipewire-pulse
+  sof-firmware
+)
+
+sndpkgs_tot=$(echo -n "${sndpkgs[@]}" | wc -w)
+
+# Misc
+miscpkgs=(
+  cups
+  fastfetch
+  hplip
+  htop
+  kitty
+  pacman-contrib
+  terminus-font
+  xclip
+)
+
+miscpkgs_tot=$(echo -n "${miscpkgs[@]}" | wc -w)
+
+pkg_tots=(
+    basepkgs_tot
+    bootpkgs_tot
+    filepkgs_tot
+    snappkgs_tot
+    manpkgs_tot
+    xdgpkgs_tot
+    netpkgs_tot
+    sndpkgs_tot
+    miscpkgs_tot
+)
+
+pkg_arrays=(
+    basepkgs
+    bootpkgs
+    filepkgs
+    snappkgs
+    manpkgs
+    xdgpkgs
+    netpkgs
+    sndpkgs
+    miscpkgs
+)
+
+pkgs_tot=$((${basepkgs_tot}+${bootpkgs_tot}+${filepkgs_tot}+${snappkgs_tot}+${manpkgs_tot}+${xdgpkgs_tot}+${netpkgs_tot}+${sndpkgs_tot}+${miscpkgs_tot}))
+

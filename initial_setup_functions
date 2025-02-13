@@ -1,0 +1,200 @@
+##
+## Initail Setup Functions
+##
+
+# Ensure the required packages are installed and pacman-keyring is upto date, and the time is set correctly
+
+sys_update () {
+    pacman -Syy
+    pacman -S --noconfirm archlinux-keyring bc git dev-tools
+
+    timedatectl set-ntp true
+}
+
+# Creates the required BTRFS subvolumes to allow fully functioning Snapper rollbacks (similar to the SUSE partitioning)
+
+create_fs () {
+    # Create ESP (fat32)
+    mkfs.fat -F 32 -s 2 "${ESP}"
+
+    # Create the top-level BTRFS volume
+    mkfs.btrfs -f -n 32k "${BTRFS}"
+
+    # Mount the new top-level BTRFS filesystem
+    mount "${BTRFS}" /mnt
+
+    # Create the required BTRFS sub-volumes
+    btrfs su cr /mnt/@
+    btrfs su cr /mnt/@/.snapshots
+    mkdir -p /mnt/@/.snapshots/1
+    btrfs su cr /mnt/@/.snapshots/1/snapshot
+    mkdir -p /mnt/@/boot
+    btrfs su cr /mnt/@/boot/grub
+    # btrfs su cr /mnt/@/boot/grub
+    btrfs su cr /mnt/@/home
+    # btrfs su cr /mnt/@/opt
+    btrfs su cr /mnt/@/root
+    btrfs su cr /mnt/@/srv
+    btrfs su cr /mnt/@/tmp
+    mkdir /mnt/@/usr
+    btrfs su cr /mnt/@/usr/local
+    mkdir /mnt/@/var
+    btrfs su cr /mnt/@/var/cache
+    # btrfs su cr /mnt/@/var/crash
+    btrfs su cr /mnt/@/var/log
+    btrfs su cr /mnt/@/var/spool
+    btrfs su cr /mnt/@/var/tmp
+    mkdir /mnt/@/var/lib
+    btrfs su cr /mnt/@/var/lib/libvirt_images
+    btrfs su cr /mnt/@/var/lib/machines
+    if [[ ! -z ${part_vms} ]] ; then
+        mkdir -p /mnt/vm
+    fi
+
+    # Create Initial snapshot info.xml file
+    echo "<?xml version=\"1.0\"?>
+    <snapshot>
+        <type>single</type>
+        <num>1</num>
+        <date>${installation_date}</date>
+        <description>Initial Root Filesystem</description>
+        <cleanup>number</cleanup>
+    </snapshot>" > /mnt/@/.snapshots/1/info.xml
+
+    # Set the default snapshot to the newly created snapshot 1
+    btrfs subvolume set-default "$(btrfs subvolume list /mnt | grep "@/.snapshots/1/snapshot" | grep -oP '(?<=ID )[0-9]+')" /mnt
+
+    # Enable btrfs quota
+    btrfs quota enable /mnt
+    btrfs qgroup create 1/0 /mnt
+
+    # Disable CoW on subvolumes not having snapshots taken
+    # chattr +C /mnt/@/boot
+    # chattr +C /mnt/@/home
+    # chattr +C /mnt/@/root
+    # chattr +C /mnt/@/srv
+    chattr +C /mnt/@/var/cache
+    # chattr +C /mnt/@/var/crash
+    chattr +C /mnt/@/var/log
+    chattr +C /mnt/@/var/spool
+    chattr +C /mnt/@/var/tmp
+    chattr +C /mnt/@/var/lib/libvirt_images
+    chattr +C /mnt/@/var/lib/machines
+
+    # Un-mount the BTRFS top-level volume
+    umount /mnt## Add progress bar redraw
+
+}
+
+# Mount the newly created Initial snapshot and the required sub-volumes
+
+mount_fs () {
+    # Mount the Initial Snapshot 1
+    mount -o ssd,noatime,compress=zstd "${BTRFS}" /mnt
+
+    # Create the required mount points
+    mkdir -p /mnt/{.snapshots,boot/grub,efi,home,root,srv,tmp,usr/local,var/{cache,log,spool,tmp},var/lib/machines,var/lib/libvirt/images,vm}
+
+    # Mount the required sub-volumes
+    mount -o ssd,noatime,compress=zstd,subvol=@/.snapshots "${BTRFS}" /mnt/.snapshots
+    mount -o ssd,noatime,compress=zstd,nodev,nosuid,noexec,subvol=@/boot/grub "${BTRFS}" /mnt/boot/grub
+    mount -o ssd,noatime,compress=zstd,nodev,nosuid,subvol=@/root "${BTRFS}" /mnt/root
+    mount -o ssd,noatime,compress=zstd,nodev,nosuid,subvol=@/home "${BTRFS}" /mnt/home
+    mount -o ssd,noatime,compress=zstd,subvol=@/srv "${BTRFS}" /mnt/srv
+    mount -o ssd,noatime,compress=zstd,nodev,nosuid,subvol=@/tmp "${BTRFS}" /mnt/tmp
+    mount -o ssd,noatime,compress=zstd,subvol=@/usr/local "${BTRFS}" /mnt/usr/local
+    mount -o ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec,subvol=@/var/cache "${BTRFS}" /mnt/var/cache
+    # mount -o ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec,subvol=@/var/crash "${BTRFS}" /mnt/var/crash
+    mount -o ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec,subvol=@/var/log "${BTRFS}" /mnt/var/log
+    mount -o ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec,subvol=@/var/spool "${BTRFS}" /mnt/var/# Increase completed counter by 1
+    completed=$((completed+1))spool
+    mount -o ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec,subvol=@/var/tmp "${BTRFS}" /mnt/var/tmp
+    mount -o ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec,subvol=@/var/lib/libvirt_images "${BTRFS}" /mnt/var/lib/libvirt/images
+    mount -o ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec,subvol=@/var/lib/machines "${BTRFS}" /mnt/var/lib/machines
+
+    # Mount the ESP and VM partition (if specified)
+    mount -o nodev,nosuid,noexec "${ESP}" /mnt/efi
+    if [[ ! -z ${part_vms} ]]; then
+        mount -o ssd,noatime "${VM}" /mnt/vm
+    fi
+}
+
+# Function Progress Indicator
+
+func_inst_ind () {
+    draw_prog_bars "$2" $current_completed $current_task_tot $completed $total_num_tasks
+    $1 > /dev/null 2>&1 &
+    funcid=$!
+    func=$1
+    while [ -d /proc/$funcid ]; do
+        printf "\rThe install function '${ltblu}${func}${none}' is .... ${ltred}${italic}${blink}Running${none}"
+    done
+    tput el1
+    printf "\rThe install function '${ltblu}$1${none}' is .... ${grn}COMPLETE${none}\n"
+
+    # Increase completed counter by 1
+    completed=$((completed+1))
+    current_completed=$((current_completed+1))
+
+    draw_prog_bars "$2" $current_completed $current_task_tot $completed $total_num_tasks
+    sleep 1
+
+}
+
+# Install the new base system along with the packages specified in the package arrays
+
+install_base () {
+
+    # Call each package array in turn and install all the specified packages
+    for group in "${pkg_arrays[@]}" ; do
+        current_completed=0
+        declare -n pkgs=$group
+
+        # Get number of packages in respective package array
+
+        current_task_tot=$(echo "${#pkgs[@]}")
+
+        draw_prog_bars "'$group' Progress" $current_completed $current_task_tot $completed $total_num_tasks
+
+        printf "\nInstalling the following '${cyn}${group}${none}' packages:${none}\n"
+            for pkg in "${pkgs[@]}" ; do
+                pkg_inst_ind $pkg
+            done
+    done
+    echo ""
+}
+
+# Package Install Indicator
+
+pkg_inst_ind () {
+
+    pacstrap /mnt $1 > /dev/null 2>&1 &
+    funcid=$!
+    pkgname=$1
+    while [[ -d /proc/$funcid ]] ; do
+        printf "\r\tInstallation of '${ltblu}${pkgname}${none}' is ... ${ltred}${italic}${blink}Running${none}"
+    done
+    tput el1
+    printf "\r\tInstallation of '${ltblu}${pkgname}${none}' is ... ${grn}COMPLETE${none}\n"
+
+    # Increase completed pkg counter by 1
+    current_completed=$((current_completed+1))
+
+    # Increase completed counter by 1
+    completed=$((completed+1))
+
+    draw_prog_bars "'$group' Progress" $current_completed $current_task_tot $completed $total_num_tasks
+    sleep 1
+}
+
+# Generate the new system fstab file
+
+generate_fstab () {
+    genfstab -U /mnt >> /mnt/etc/fstab
+
+    # Remove subvolid from fstab
+    sed -i 's#,subvolid=258,subvol=/@/.snapshots/1/snapshot,subvol=@/.snapshots/1/snapshot##g' /mnt/etc/fstab
+
+    # Increase completed counter by 1
+    completed=$((completed+1))
+}

@@ -1,0 +1,34 @@
+##
+## Function arrays
+##
+
+fs_create=(
+    create_fs
+    mount_fs
+)
+
+fs_create_tot=$(echo -n "${fs_create[@]}" | wc -w)
+
+base_inst=(
+    install_base
+)
+
+base_inst_tot=$(echo -n "${base_inst[@]}" | wc -w)
+
+fs_final=(
+    generate_fstab
+)
+
+fs_final_tot=$(echo -n "${fs_final[@]}" | wc -w)
+
+config=(
+    configure_base
+    configure_chroot
+    set_password
+    configure_services
+)
+
+conf_func_tot=$(echo -n "${config[@]}" | wc -w)
+
+func_tot=$((${fs_create_tot}+${base_inst_tot}+${fs_final_tot}+${conf_func_tot}))
+

@@ -1,0 +1,270 @@
+##
+## Install Script Main Menu and Heading
+##
+menu_title=""
+menu_name=""
+menu_item=""
+
+# Menu sizes and data
+if [ $(tput lines) -le 50 ]; then
+    frame=1
+    line_space=0
+    top=1
+    bottom=1
+else
+    frame=2
+    line_space=1
+    top=2
+    bottom=2
+fi
+
+side=10
+
+screen_width=$(tput cols)
+
+header_height=$(((${frame}*2)+${top}+(${line_space}*2)+${bottom}+5))
+
+# Find largest Header item label
+
+hdr_main_width () {
+    # Check label lengths are even, if not correct
+
+    title_len=$(echo -n ${menu_title} | wc -c)
+    if [ ! $((${title_len}%2)) -eq 0 ]; then
+        title_len=$((title_len+1))
+        menu_title=$(printf "%${title_len}s" "${menu_title}")
+    fi
+
+    name_len=$(echo -n "${menu_name}" | wc -c)
+    if [ ! $((${name_len}%2)) -eq 0 ]; then
+        name_len=$((name_len+1))
+        menu_name=$(printf "%${name_len}s" "${menu_name}")
+    fi
+
+    item_len=$(echo -n "${menu_item}" | wc -c)
+    if [ ! $((${item_len}%2)) -eq 0 ]; then
+        item_len=$((item_len+1))
+        menu_item=$(printf "%${item_len}s" "${menu_item}")
+    fi
+
+    if [ $title_len -gt $name_len ] && [ $title_len -ge $item_len ]; then
+        label_width=$title_len
+    elif [ $title_len -lt $name_len ] && [ $name_len -le $item_len ]; then
+        label_width=$item_len
+    else
+        label_width=$name_len
+    fi
+
+    title_pad=$(((${label_width}-${title_len})/2))
+    name_pad=$(((${label_width}-${name_len})/2))
+    item_pad=$(((${label_width}-${item_len})/2))
+
+    hdr_width=$((${frame}+${side}+${label_width}+${side}+${frame}))
+    int_pad_req_empty=$((${hdr_width}-(${frame}*2)))
+    int_pad_req_text=$((${int_pad_req_empty}-${label_width}))
+}
+
+# Calculate required padding either side of printed line
+
+centre () {
+    padng=$((($1-$2)/2))
+    ctext=$(padding ${padng} " " ${none}; echo -en "$3"; padding ${padng} " " ${none})
+    echo -e "${ctext}"
+}
+
+# Draw required segments for progress bars of line padding
+
+padding () {
+    pad=$(printf "$3%-$1s" "$2")
+    echo -ne "${pad// /$2}"
+}
+
+# Script Heading
+
+build_header () {
+    # Ensure blank spaces are not printed if padding value is zero
+    if [ ${side} = "0" ]; then
+        pad_side=""
+    else
+        pad_side=" "
+    fi
+    if [ ${title_pad} = "0" ]; then
+        pad_title=""
+    else
+        pad_title=" "
+    fi
+    if [ ${name_pad} = "0" ]; then
+        pad_name=""
+    else
+        pad_name=" "
+    fi
+    if [ ${item_pad} = "0" ]; then
+        pad_item=""
+    else
+        pad_item=" "
+    fi
+
+    # Construct Header lines
+    line1=$(printf "${grn}%${hdr_width}s${none}" "#")
+    line1=$(echo "${line1// /#}")
+
+    line2=$(padding ${frame} "#" ${grn}; padding ${int_pad_req_empty} " " ${none}; padding ${frame} "#" ${grn})
+
+    # Title Line
+
+    blank3=$((${int_pad_req_text}/2))
+    line3=$(padding ${frame} "#" ${grn}; padding ${side} "${pad_side}" ${none}; padding ${title_pad} "${pad_title}" ${none}; echo -ne "${ltcyn}${bold}${menu_title}${none}"; padding ${title_pad} "${pad_title}" ${none}; padding ${side} "${pad_side}" ${none}; padding ${frame} "#" ${grn})
+
+    line4=$(padding ${frame} "#" ${grn}; padding ${int_pad_req_empty} " " ${none}; padding ${frame} "#" ${grn})
+
+    # Name Line
+
+    blank5=$((${int_pad_req_text}/2))
+    line5=$(padding ${frame} "#" ${grn}; padding ${side} "${pad_side}" ${none}; padding ${name_pad} "${pad_name}" ${none}; echo -ne "${ylw}${italic}${menu_name}${none}"; padding ${name_pad} "${pad_name}" ${none}; padding ${side} "${pad_side}" ${none}; padding ${frame} "#" ${grn})
+
+    line6=$(padding ${frame} "#" ${grn}; padding ${int_pad_req_empty} " " ${none}; padding ${frame} "#" ${grn})
+
+    # Item Line
+
+    blank7=$((${int_pad_req_text}/2))
+    line7=$(padding ${item_pad} "${pad_item}" ${none}; echo -n "${red}${dim}${menu_item}${none}"; padding ${item_pad} "${pad_item}" ${none})
+    line7=$(padding ${frame} "#" ${grn}; padding ${blank7} "${pad_side}" ${none}; echo -ne "${line7}"; padding ${blank7} "${pad_side}" ${none}; padding ${frame} "#" ${grn})
+
+
+    line8=$(padding "${frame}" "#" ${grn}; padding ${int_pad_req_empty} " "; padding "${frame}" "#" ${grn})
+
+    line9=$(printf "${grn}%${hdr_width}s${none}" "#")
+    line9=$(echo "${line9// /#}")
+}
+
+draw_header () {
+    echo ""
+    # Draw Header
+    for ((i = 1 ; i <= ${frame} ; i++)); do
+        centre ${screen_width} ${hdr_width} "${line1}"
+    done
+    for ((i = 1 ; i <= ${top} ; i++)); do
+        centre ${screen_width} ${hdr_width} "${line2}"
+    done
+    centre ${screen_width} ${hdr_width} "${line3}"
+    for ((i = 1 ; i <= ${line_space} ; i++)); do
+        centre ${screen_width} ${hdr_width} "${line4}"
+    done
+    centre ${screen_width} ${hdr_width} "${line5}"
+    for ((i = 1 ; i <= ${line_space} ; i++)); do
+        centre ${screen_width} ${hdr_width} "${line6}"
+    done
+    centre ${screen_width} ${hdr_width} "${line7}"
+    for ((i = 1 ; i <= ${bottom} ; i++)); do
+        centre ${screen_width} ${hdr_width} "${line8}"
+    done
+    for ((i = 1 ; i <= ${frame} ; i++)); do
+        centre ${screen_width} ${hdr_width} "${line9}"
+    done
+    echo ""
+}
+
+setup_menu () {
+    printf "\n${ylw}Please complete the following items to configure the install script.${none}\n"
+    printf "\n1.  Configure the partitions to use for the install.       %b  %b" "${part_done}" "${part_usr}"
+    printf "\n2.  Configure the 'Hostname'.                              %b  %b" "${host_done}" "${host_usr}"
+    printf "\n3.  Configure the 'Domain name'.                           %b  %b" "${domain_done}" "${domain_usr}"
+    printf "\n4.  Configure the Full name of the new user.               %b  %b" "${fullname_done}" "${fullname_usr}"
+    printf "\n5.  Configure the Username of the new user.                %b  %b" "${username_done}" "${username_usr}"
+    printf "\n6.  Set the password for the new user.                     %b" "${password_done}"
+    printf "\n"
+    printf "\n7.  ${red}Start the install.${none}\n"
+    printf "\n8.  ${cyn}Exit the script.${none}\n"
+}
+
+setup_select () {
+    read -p $'\n\n\e[33mPlease select the item to configure: \e[0m' choice
+    case $choice in
+        1)
+            menu_item="Choose Partitions"
+            draw_hdr
+            set_scroll
+            draw_prog_bars "Script Configuration" ${usr}  ${usr_input_tot} $completed ${total_num_tasks}
+            partition
+            main_menu
+            ;;
+        2)
+            menu_item="(Computer) Hostname"
+            draw_hdr
+            set_scroll
+            draw_prog_bars "Script Configuration" ${usr}  ${usr_input_tot} $completed ${total_num_tasks}
+            hostname
+            main_menu
+            ;;
+        3)
+            menu_item="(Computer) Domain"
+            draw_hdr
+            set_scroll
+            draw_prog_bars "Script Configuration" ${usr}  ${usr_input_tot} $completed ${total_num_tasks}
+            domain
+            main_menu
+            ;;
+        4)
+            menu_item="(New User) Full Name"
+            draw_hdr
+            set_scroll
+            draw_prog_bars "Script Configuration" ${usr}  ${usr_input_tot} $completed ${total_num_tasks}
+            fullname
+            main_menu
+            ;;
+        5)
+            menu_item="(${fullname}) Username"
+            draw_hdr
+            set_scroll
+            draw_prog_bars "Script Configuration" ${usr}  ${usr_input_tot} $completed ${total_num_tasks}
+            username_set
+            main_menu
+            ;;
+        6)
+            menu_item="($fullname) Password"
+            draw_hdr
+            set_scroll
+            draw_prog_bars "Script Configuration" ${usr}  ${usr_input_tot} $completed ${total_num_tasks}
+            set_user_password
+            main_menu
+            ;;
+        7)
+            menu_name="Script Installation"
+            menu_item="Installing ..."
+            draw_hdr
+
+            run_initial ${fs_create_tot}
+            install_base
+            run_final_inst ${fs_final_tot}
+            run_config ${conf_func_tot}
+
+            # Finish up
+            copy_post_install > /dev/null 2>&1
+
+            printf "\n\n${grn}Your New ${cyn}Arch Linux${grn} installation is now complete${none}"
+            echo ""
+            read -p "${ylw}Do you wish to reboot your system now? (yes/no): " reboot
+            case $reboot in
+                yes)
+                    umount -Rf /mnt
+                    reboot
+                    ;;
+                no)
+                    printf "\n\n${grn}If you wish to make further channges to the new system you can chroot into it at /mnt.${none}"
+                    reset_scroll
+                    exit
+                    ;;
+            esac
+            ;;
+        8)
+            reset_scroll
+            clear
+            exit
+            ;;
+        *)
+            draw_hdr
+            set_scroll
+            main_menu
+            ;;
+    esac
+}

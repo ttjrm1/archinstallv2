@@ -1,0 +1,7 @@
+##
+## Script Hard Variables
+##
+installation_date=$(date "+%Y-%m-%d %H:%M:%S")
+locale=en_GB
+kblayout=uk
+zoneinfo=Europe/London
