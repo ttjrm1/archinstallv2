@@ -67,7 +67,8 @@ configure_chroot () {
     mkdir /mnt/install
 
     # Create configure file to run from within chroot
-    echo "#!/bin/bash
+    echo > /mnt/install/config.sh<<EOF
+    #!/bin/bash
 
     # Setting up timezone
     # Temporarily hardcoding here
@@ -119,7 +120,8 @@ configure_chroot () {
     # Enable the Multilib repo
     sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
 
-    exit" > /mnt/install/config.sh
+    exit
+    EOF
 
     chmod +x /mnt/install/config.sh
 
