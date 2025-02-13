@@ -127,7 +127,7 @@ build_header () {
     # Item Line
 
     blank7=$((${int_pad_req_text}/2))
-    line7=$(padding ${item_pad} "${pad_item}" ${none}; echo -n "${red}${dim}${menu_item}${none}"; padding ${item_pad} "${pad_item}" ${none})
+    line7=$(padding ${item_pad} "${pad_item}" ${none}; echo -ne "${ltred}${menu_item}${none}"; padding ${item_pad} "${pad_item}" ${none})
     line7=$(padding ${frame} "#" ${grn}; padding ${blank7} "${pad_side}" ${none}; echo -ne "${line7}"; padding ${blank7} "${pad_side}" ${none}; padding ${frame} "#" ${grn})
 
 
