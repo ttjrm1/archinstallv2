@@ -169,7 +169,7 @@ install_base () {
 
 pkg_inst_ind () {
 
-    pacstrap /mnt $1 
+    pacstrap /mnt $1 > /dev/null 2> /mnt/$1_error &
     funcid=$!
     pkgname=$1
     while [[ -d /proc/$funcid ]] ; do
