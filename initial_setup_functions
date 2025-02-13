@@ -6,7 +6,7 @@
 
 sys_update () {
     pacman -Syy
-    pacman -S --noconfirm archlinux-keyring bc git dev-tools
+    pacman -S --noconfirm archlinux-keyring bc git devtools
 
     timedatectl set-ntp true
 }
