@@ -67,7 +67,7 @@ configure_chroot () {
     mkdir /mnt/install
 
     # Create configure file to run from within chroot
-    echo > /mnt/install/config.sh << EOF
+    cat > /mnt/install/config.sh << EOF
     #!/bin/bash
 
     # Setting up timezone
