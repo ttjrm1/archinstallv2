@@ -13,14 +13,10 @@ install_paru () {
     makepkg -si
 }
 
-intstall_snap_pac_grub () {
-    paru -S --noconfirm snap-pac-grub
-}
-
 take_post_install_snaphot () {
    sudo snapper -v -c root create -t single -d "Post Clean Install Snapshot"
 }
 
 sudo pacman -Syy
 install_paru
-intstall_snap_pac_grub
+take_post_install_snapshot
