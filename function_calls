@@ -23,6 +23,10 @@ run_initial () {
         func_inst_ind $i "Create Filesystems"
     done
 
+    # Increase completed counter by 1
+    completed=$((completed+1))
+    current_completed=$((current_completed+1))
+
     draw_prog_bars "Create Filesystems" $current_completed $current_task_tot $completed $total_num_tasks
     sleep 1
 }
@@ -39,6 +43,10 @@ run_final_inst () {
         func_inst_ind $i "Create New System 'fstab'"
     done
 
+    # Increase completed counter by 1
+    completed=$((completed+1))
+    current_completed=$((current_completed+1))
+
     draw_prog_bars "Create New System 'fstab'" $current_completed $current_task_tot $completed $total_num_tasks
 }
 
@@ -51,6 +59,10 @@ run_config () {
     for i in "${config[@]}" ; do
         func_inst_ind $i "Final System Configiguration"
     done
+
+    # Increase completed counter by 1
+    completed=$((completed+1))
+    current_completed=$((current_completed+1))
 
     draw_prog_bars "Final System Configuration" $current_completed $current_task_tot $completed $total_num_tasks
 }
