@@ -190,7 +190,4 @@ generate_fstab () {
 
     # Remove subvolid from fstab
     sed -i 's#,subvolid=258,subvol=/@/.snapshots/1/snapshot,subvol=@/.snapshots/1/snapshot##g' /mnt/etc/fstab
-
-    # Increase completed counter by 1
-    completed=$((completed+1))
 }
