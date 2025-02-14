@@ -132,10 +132,6 @@ func_inst_ind () {
     tput el1
     printf "\rThe install function '${ltblu}$1${none}' is .... ${grn}COMPLETE${none}\n"
 
-    # Increase completed counter by 1
-    completed=$((completed+1))
-    current_completed=$((current_completed+1))
-
     draw_prog_bars "$2" $current_completed $current_task_tot $completed $total_num_tasks
     sleep 1
 
