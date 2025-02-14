@@ -97,21 +97,20 @@ mount_fs () {
     mkdir -p /mnt/{.snapshots,boot/grub,efi,home,root,srv,tmp,usr/local,var/{cache,log,spool,tmp},var/lib/machines,var/lib/libvirt/images,vm}
 
     # Mount the required sub-volumes
-    mount -o ssd,noatime,compress=zstd,subvol=@/.snapshots "${BTRFS}" /mnt/.snapshots
-    mount -o ssd,noatime,compress=zstd,nodev,nosuid,noexec,subvol=@/boot/grub "${BTRFS}" /mnt/boot/grub
-    mount -o ssd,noatime,compress=zstd,nodev,nosuid,subvol=@/root "${BTRFS}" /mnt/root
-    mount -o ssd,noatime,compress=zstd,nodev,nosuid,subvol=@/home "${BTRFS}" /mnt/home
-    mount -o ssd,noatime,compress=zstd,subvol=@/srv "${BTRFS}" /mnt/srv
-    mount -o ssd,noatime,compress=zstd,nodev,nosuid,subvol=@/tmp "${BTRFS}" /mnt/tmp
-    mount -o ssd,noatime,compress=zstd,subvol=@/usr/local "${BTRFS}" /mnt/usr/local
-    mount -o ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec,subvol=@/var/cache "${BTRFS}" /mnt/var/cache
-    # mount -o ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec,subvol=@/var/crash "${BTRFS}" /mnt/var/crash
-    mount -o ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec,subvol=@/var/log "${BTRFS}" /mnt/var/log
-    mount -o ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec,subvol=@/var/spool "${BTRFS}" /mnt/var/# Increase completed counter by 1
-    completed=$((completed+1))spool
-    mount -o ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec,subvol=@/var/tmp "${BTRFS}" /mnt/var/tmp
-    mount -o ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec,subvol=@/var/lib/libvirt_images "${BTRFS}" /mnt/var/lib/libvirt/images
-    mount -o ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec,subvol=@/var/lib/machines "${BTRFS}" /mnt/var/lib/machines
+    mount -o ssd,noatime,compress=-force=zstd,autodefrag,subvol=@/.snapshots "${BTRFS}" /mnt/.snapshots
+    mount -o ssd,noatime,compress=-force=zstd,autodefrag,nodev,nosuid,noexec,subvol=@/boot/grub "${BTRFS}" /mnt/boot/grub
+    mount -o ssd,noatime,compress-force=zstd,autodefrag,nodev,nosuid,subvol=@/root "${BTRFS}" /mnt/root
+    mount -o ssd,noatime,compress-force=zstd,autodefrag,nodev,nosuid,subvol=@/home "${BTRFS}" /mnt/home
+    mount -o ssd,noatime,compress-force=zstd,autodefrag,subvol=@/srv "${BTRFS}" /mnt/srv
+    mount -o ssd,noatime,compress-force=zstd,autodefrag,nodev,nosuid,subvol=@/tmp "${BTRFS}" /mnt/tmp
+    mount -o ssd,noatime,compress-force=zstd,autodefrag,subvol=@/usr/local "${BTRFS}" /mnt/usr/local
+    mount -o ssd,noatime,compress-force=zstd,autodefrag,nodatacow,nodev,nosuid,noexec,subvol=@/var/cache "${BTRFS}" /mnt/var/cache
+    # mount -o ssd,noatime,compress-force=zstd,autodefrag,nodatacow,nodev,nosuid,noexec,subvol=@/var/crash "${BTRFS}" /mnt/var/crash
+    mount -o ssd,noatime,compress-force=zstd,autodefrag,nodatacow,nodev,nosuid,noexec,subvol=@/var/log "${BTRFS}" /mnt/var/log
+    mount -o ssd,noatime,compress-force=zstd,autodefrag,nodatacow,nodev,nosuid,noexec,subvol=@/var/spool "${BTRFS}" /mnt/var/spool
+    mount -o ssd,noatime,compress-force=zstd,autodefrag,nodatacow,nodev,nosuid,noexec,subvol=@/var/tmp "${BTRFS}" /mnt/var/tmp
+    mount -o ssd,noatime,compress-force=zstd,autodefrag,nodatacow,nodev,nosuid,noexec,subvol=@/var/lib/libvirt_images "${BTRFS}" /mnt/var/lib/libvirt/images
+    mount -o ssd,noatime,compress-force=zstd,autodefrag,nodatacow,nodev,nosuid,noexec,subvol=@/var/lib/machines "${BTRFS}" /mnt/var/lib/machines
 
     # Mount the ESP and VM partition (if specified)
     mount -o nodev,nosuid,noexec "${ESP}" /mnt/efi
