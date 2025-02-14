@@ -159,4 +159,5 @@ configure_services () {
 copy_post_install () {
     mkdir /mnt/home/$username
     cp ./2-post_install.sh /mnt/home/$username
+    chmod 777 /mnt/home/$username/2-post_install.sh
 }
