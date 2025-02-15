@@ -73,10 +73,10 @@ percentage () {
 
 bar_segments () {
 
-    task=$(printf " ${current_completed}"/${current_task_tot} ")
-    task_len=$(echo -n "$task" | wc -c)
+    task_nums=$(printf " ${current_completed}"/${current_task_tot} ")
+    task__num_len=$(echo -n "$task" | wc -c)
 
-    bar_length=$((${screen_width}-${label_len}-${pct_label_len}-${task_len}-5))
+    bar_length=$((${screen_width}-${label_len}-${pct_label_len}-${task_num_len}-5))
 
     bar_completed=$(echo "scale=2;(${bar_length}*$1) / 100" | bc -l )
     bar_completed=$(printf '%.*f' 1 ${bar_completed})
@@ -87,7 +87,7 @@ bar_segments () {
     comp_prog_bar=$( draw_segments ${bar_completed} "#" $3)
     rem_prog_bar=$( draw_segments ${bar_remaining} "." ${none} )
 
-    prog_bar=$( echo -ne "["; echo -ne "${comp_prog_bar}"; echo -ne "${rem_prog_bar}"; echo -ne "]"; echo -ne "$task"; echo -ne "${pct_label}")
+    prog_bar=$( echo -ne "["; echo -ne "${comp_prog_bar}"; echo -ne "${rem_prog_bar}"; echo -ne "]"; echo -ne "$task_nums"; echo -ne "${pct_label}")
 }
 
 
