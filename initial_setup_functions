@@ -97,8 +97,8 @@ mount_fs () {
     mkdir -p /mnt/{.snapshots,boot/grub,efi,home,root,srv,tmp,usr/local,var/{cache,log,spool,tmp},var/lib/machines,var/lib/libvirt/images,vm}
 
     # Mount the required sub-volumes
-    mount -o ssd,noatime,compress=-force=zstd,autodefrag,subvol=@/.snapshots "${BTRFS}" /mnt/.snapshots
-    mount -o ssd,noatime,compress=-force=zstd,autodefrag,nodev,nosuid,noexec,subvol=@/boot/grub "${BTRFS}" /mnt/boot/grub
+    mount -o ssd,noatime,compress-force=zstd,autodefrag,subvol=@/.snapshots "${BTRFS}" /mnt/.snapshots
+    mount -o ssd,noatime,compress-force=zstd,autodefrag,nodev,nosuid,noexec,subvol=@/boot/grub "${BTRFS}" /mnt/boot/grub
     mount -o ssd,noatime,compress-force=zstd,autodefrag,nodev,nosuid,subvol=@/root "${BTRFS}" /mnt/root
     mount -o ssd,noatime,compress-force=zstd,autodefrag,nodev,nosuid,subvol=@/home "${BTRFS}" /mnt/home
     mount -o ssd,noatime,compress-force=zstd,autodefrag,subvol=@/srv "${BTRFS}" /mnt/srv
