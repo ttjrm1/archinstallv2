@@ -72,7 +72,7 @@ percentage () {
 }
 
 bar_segments () {
-    tasks
+    task_num
     bar_length=$((${screen_width}-${label_len}-${pct_label_len}-${task_len}-5))
 
     bar_completed=$(echo "scale=2;(${bar_length}*$1) / 100" | bc -l )
@@ -87,7 +87,7 @@ bar_segments () {
     prog_bar=$( echo -ne "["; echo -ne "${comp_prog_bar}"; echo -ne "${rem_prog_bar}"; echo -ne "]"; echo -ne "$task"; echo -ne "${pct_label}")
 }
 
-tasks () {
+task_num () {
     task=$(printf " $current_completed"/$current_task_tot ")
     task_len=$(echo -n "$task" | wc -c)
 }
