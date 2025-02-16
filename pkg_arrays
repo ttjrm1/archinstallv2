@@ -14,10 +14,9 @@ basepkgs=(
 
 basepkgs_tot=$(echo -n "${basepkgs[@]}" | wc -w)
 
-# Boot
+# Boot grub-btrfs
 bootpkgs=(
   grub
-  grub-btrfs
   os-prober
   efibootmgr
 )
