@@ -13,7 +13,7 @@ install_paru () {
     makepkg -si
 }
 
-take_post_install_snaphot () {
+take_post_install_snapshot () {
    sudo snapper -v -c root create -t single -d "Post Clean Install Snapshot"
 }
 
