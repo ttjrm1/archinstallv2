@@ -22,8 +22,8 @@ configure_base () {
     ## Configure /etc/mkinitcpio.conf for ZSTD compression
     ##
     sed -i 's/#COMPRESSION="zstd"/COMPRESSION="zstd"/g' /mnt/etc/mkinitcpio.conf
-    sed -i 's/^MODULES=.*/MODULES=(btrfs)/g' /mnt/etc/mkinitcpio.conf
-    sed -i 's/^HOOKS=.*/HOOKS=(systemd autodetect microcode modconf consolefont keymap keyboard sd-vconsole block)/g' /mnt/etc/mkinitcpio.conf
+    sed -i 's/^MODULES=.*/MODULES=(btrfs vfio_pci vfio vfio_iommu_type1)/g' /mnt/etc/mkinitcpio.conf
+    sed -i 's/^HOOKS=.*/HOOKS=(base systemd autodetect microcode modconf consolefont keymap keyboard sd-vconsole block)/g' /mnt/etc/mkinitcpio.conf
 
     ##
     ## Configure /etc/hots file
@@ -50,6 +50,10 @@ configure_base () {
     # Booting with BTRFS subvolume
     GRUB_BTRFS_OVERRIDE_BOOT_PARTITION_DETECTION=true' >> /mnt/etc/default/grub
 
+    # Additional grub cmdline options
+    sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet"/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet intel_iommu=on iommu=pt"/g' /etc/snapper/configs/root
+    
+
     ## Disable root subvol pinning
     ## This is **extremely** important, as snapper expects to be able to set the default btrfs subvol
     sed -i 's/rootflags=subvol=${rootsubvol}//g' /mnt/etc/grub.d/10_linux
@@ -61,7 +65,7 @@ configure_base () {
 
     # Update reflector
     echo "Start reflector..."
-    reflector -c "United Kingdom" -p https -a 3 --sort rate --save /mnt/etc/pacman.d/mirrorlist
+    reflector -c "United Kingdom" -p https -a 2 --sort rate --save /mnt/etc/pacman.d/mirrorlist
 }
 
 configure_chroot () {
