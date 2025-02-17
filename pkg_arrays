@@ -4,7 +4,6 @@ basepkgs=(
     base-devel
     devtools
     intel-ucode
-    linux
     linux-xen
     linux-headers
     linux-firmware
@@ -46,6 +45,8 @@ filepkgs=(
   reflector
   rsync
   unzip
+  vim
+  wget
   zip
 )
 
@@ -70,7 +71,7 @@ manpkgs_tot=$(echo -n "${manpkgs[@]}" | wc -w)
 
 # Xdg
 xdgpkgs=(
-  xdg-desktop-portal-wlr
+  xdg-desktop-portal-hyprland
   xdg-user-dirs
   xdg-utils
 )
@@ -85,9 +86,11 @@ netpkgs=(
   dnsutils
   firewalld
   inetutils
+  iwd
   networkmanager
   network-manager-applet
   openbsd-netcat
+  wireless_tools
   wpa_supplicant
 )
 
@@ -120,6 +123,21 @@ miscpkgs=(
 
 miscpkgs_tot=$(echo -n "${miscpkgs[@]}" | wc -w)
 
+# Hyprland
+hyprpkgs=(
+  hyprland
+  qt5-wayland
+  qt6-wayland
+  wofi
+  dunst
+  kitty
+  grim
+  slurp
+  polkit-kde-agent
+)
+
+hyprpkgs_tot=$(echo -n "${miscpkgs[@]}" | wc -w)
+
 pkg_tots=(
     basepkgs_tot
     bootpkgs_tot
@@ -130,6 +148,7 @@ pkg_tots=(
     netpkgs_tot
     sndpkgs_tot
     miscpkgs_tot
+    hyprpkgs_tot
 )
 
 pkg_arrays=(
@@ -142,7 +161,8 @@ pkg_arrays=(
     netpkgs
     sndpkgs
     miscpkgs
+    hyprpkgs
 )
 
-pkgs_tot=$((${basepkgs_tot}+${bootpkgs_tot}+${filepkgs_tot}+${snappkgs_tot}+${manpkgs_tot}+${xdgpkgs_tot}+${netpkgs_tot}+${sndpkgs_tot}+${miscpkgs_tot}))
+pkgs_tot=$((${basepkgs_tot}+${bootpkgs_tot}+${filepkgs_tot}+${snappkgs_tot}+${manpkgs_tot}+${xdgpkgs_tot}+${netpkgs_tot}+${sndpkgs_tot}+${miscpkgs_tot}+${hyprpkgs}))
 
