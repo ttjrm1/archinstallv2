@@ -149,7 +149,7 @@ configure_services () {
     #systemctl enable cups --root=/mnt
     #systemctl enable firewalld --root=/mnt
     systemctl enable fstrim.timer --root=/mnt
-    systemctl enable grub-btrfsd --root=/mnt
+    #systemctl enable grub-btrfsd --root=/mnt
     systemctl enable snapper-timeline.timer --root=/mnt
     systemctl enable snapper-cleanup.timer --root=/mnt
     systemctl enable NetworkManager --root=/mnt
@@ -160,5 +160,5 @@ configure_services () {
 copy_post_install () {
     mkdir /mnt/home/$username
     cp ./2-post_install.sh /mnt/home/$username
-    chown $username:$username /mnt/home/$username/2-post_install.sh
+    chmod 777 /mnt/home/$username/2-post_install.sh
 }
