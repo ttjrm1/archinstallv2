@@ -4,6 +4,7 @@ basepkgs=(
     base-devel
     devtools
     intel-ucode
+    linux
     linux-zen
     linux-headers
     linux-firmware
@@ -111,6 +112,7 @@ sndpkgs_tot=$(echo -n "${sndpkgs[@]}" | wc -w)
 # Misc
 miscpkgs=(
   cups
+  dialog
   fastfetch
   hplip
   htop
@@ -148,7 +150,6 @@ pkg_tots=(
     netpkgs_tot
     sndpkgs_tot
     miscpkgs_tot
-    hyprpkgs_tot
 )
 
 pkg_arrays=(
@@ -161,7 +162,6 @@ pkg_arrays=(
     netpkgs
     sndpkgs
     miscpkgs
-    hyprpkgs
 )
 
 pkgs_tot=$((${basepkgs_tot}+${bootpkgs_tot}+${filepkgs_tot}+${snappkgs_tot}+${manpkgs_tot}+${xdgpkgs_tot}+${netpkgs_tot}+${sndpkgs_tot}+${miscpkgs_tot}+${hyprpkgs}))
