@@ -71,7 +71,7 @@ manpkgs_tot=$(echo -n "${manpkgs[@]}" | wc -w)
 
 # Xdg
 xdgpkgs=(
-  xdg-desktop-portal-hyprland
+  xdg-desktop-portal-wlr
   xdg-user-dirs
   xdg-utils
 )
