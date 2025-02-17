@@ -61,7 +61,7 @@ configure_base () {
 
     # Update reflector
     echo "Start reflector..."
-    reflector -c "United Kingdom," -p https -a 3 --sort rate -- save /mnt/etc/pacman.d/mirrorlist
+    reflector -c "United Kingdom," -p https -a 3 --sort rate --save /mnt/etc/pacman.d/mirrorlist
 }
 
 configure_chroot () {
