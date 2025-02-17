@@ -5,6 +5,7 @@ basepkgs=(
     devtools
     intel-ucode
     linux
+    linux-xen
     linux-headers
     linux-firmware
     lzop
