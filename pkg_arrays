@@ -128,7 +128,9 @@ miscpkgs_tot=$(echo -n "${miscpkgs[@]}" | wc -w)
 # Graphics card
 gpupkgs=(
   mesa
+  lib32-mesa
   vulkan-radeon
+  lib32-vulkan-radeon
 )
 
 gpupkgs_tot=$(echo -n "${gpupkgs[@]}" | wc -w)
