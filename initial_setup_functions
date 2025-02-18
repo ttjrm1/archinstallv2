@@ -5,9 +5,10 @@
 # Ensure the required packages are installed and pacman-keyring is upto date, and the time is set correctly
 
 sys_update () {
+    # Enable the Multilib repo
+    sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
     pacman -Syy
     pacman -S --noconfirm archlinux-keyring 
-    #bc git devtools
 
     timedatectl set-ntp true
 }
