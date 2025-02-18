@@ -22,7 +22,7 @@ configure_base () {
     ## Configure /etc/mkinitcpio.conf for ZSTD compression
     ##
     sed -i 's/#COMPRESSION="zstd"/COMPRESSION="zstd"/g' /mnt/etc/mkinitcpio.conf
-    sed -i 's/^MODULES=.*/MODULES=(btrfs vfio_pci vfio vfio_iommu_type1)/g' /mnt/etc/mkinitcpio.conf
+    sed -i 's/^MODULES=.*/MODULES=(btrfs vfio_pci vfio vfio_iommu_type1 amdgpu)/g' /mnt/etc/mkinitcpio.conf
     sed -i 's/^HOOKS=.*/HOOKS=(base systemd autodetect microcode modconf consolefont keymap keyboard sd-vconsole block)/g' /mnt/etc/mkinitcpio.conf
 
     ##
@@ -54,8 +54,20 @@ configure_base () {
     GRUB_BTRFS_OVERRIDE_BOOT_PARTITION_DETECTION=true' >> /mnt/etc/default/grub
 
     # Additional grub cmdline options
-    sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet"/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet intel_iommu=on iommu=pt"/g' /etc/snapper/configs/root
-    
+    sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet"/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet intel_iommu=on iommu=pt"/g' /mnt/etc/default/grub
+
+    # Configure GPU drivers
+    cat > /mnt/etc/modprobe.d/vfio.conf << EOF
+    options vfio-pci ids=10de:2182,10de:1aeb,10de:1aec,10de:1aed
+EOF
+
+    # Force amdgpu driver over radeon
+    cat > /mnt/etc/modprobe.d/radeon.conf << EOF
+    options radeon si_support=0
+EOF
+    cat > /mnt/etc/modprobe.d/amdgpu.conf << EOF
+    options radeon si_support=1
+EOF
 
     ## Disable root subvol pinning
     ## This is **extremely** important, as snapper expects to be able to set the default btrfs subvol
