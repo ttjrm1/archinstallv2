@@ -125,6 +125,14 @@ miscpkgs=(
 
 miscpkgs_tot=$(echo -n "${miscpkgs[@]}" | wc -w)
 
+# Graphics card
+gpupkgs=(
+  mesa
+  vulkan-radeon
+)
+
+gpupkgs_tot=$(echo -n "${gpupkgs[@]}" | wc -w)
+
 # Hyprland
 hyprpkgs=(
   hyprland
@@ -138,7 +146,7 @@ hyprpkgs=(
   polkit-kde-agent
 )
 
-hyprpkgs_tot=$(echo -n "${miscpkgs[@]}" | wc -w)
+hyprpkgs_tot=$(echo -n "${hyprpkgs[@]}" | wc -w)
 
 pkg_tots=(
     basepkgs_tot
