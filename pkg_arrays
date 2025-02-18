@@ -162,6 +162,7 @@ pkg_tots=(
     netpkgs_tot
     sndpkgs_tot
     miscpkgs_tot
+    gpupks_tot
 )
 
 pkg_arrays=(
@@ -174,7 +175,8 @@ pkg_arrays=(
     netpkgs
     sndpkgs
     miscpkgs
+    gpupkgs
 )
 
-pkgs_tot=$((${basepkgs_tot}+${bootpkgs_tot}+${filepkgs_tot}+${snappkgs_tot}+${manpkgs_tot}+${xdgpkgs_tot}+${netpkgs_tot}+${sndpkgs_tot}+${miscpkgs_tot}+${hyprpkgs}))
+pkgs_tot=$((${basepkgs_tot}+${bootpkgs_tot}+${filepkgs_tot}+${snappkgs_tot}+${manpkgs_tot}+${xdgpkgs_tot}+${netpkgs_tot}+${sndpkgs_tot}+${miscpkgs_tot}+${gpupkgs_tot}))
 
