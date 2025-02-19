@@ -118,7 +118,6 @@ miscpkgs=(
   fastfetch
   hplip
   htop
-  kitty
   pacman-contrib
   rust
   terminus-font
@@ -140,14 +139,21 @@ gpupkgs_tot=$(echo -n "${gpupkgs[@]}" | wc -w)
 # Hyprland
 hyprpkgs=(
   hyprland
+  hyprpaper
   qt5-wayland
   qt6-wayland
   wofi
-  dunst
+  swaync
   kitty
   grim
   slurp
   polkit-kde-agent
+  ttf-font-awesome
+  hyprlock
+  waybar
+  pywal
+  firefox
+  nautilus
 )
 
 hyprpkgs_tot=$(echo -n "${hyprpkgs[@]}" | wc -w)
