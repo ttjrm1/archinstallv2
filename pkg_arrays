@@ -1,6 +1,7 @@
+base1=$(pacman -Sqg base | sed 's/^linux$/&-zen/')
 # Base
 basepkgs=(
-    $(pacman -Sqg base | sed 's/^linux$/&-zen/')
+    base1
     base-devel
     devtools
     intel-ucode
