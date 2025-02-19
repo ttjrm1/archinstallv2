@@ -1,10 +1,9 @@
 # Base
 basepkgs=(
-    base
+    $(pacman -Sqg base | sed 's/^linux$/&-zen/')
     base-devel
     devtools
     intel-ucode
-    linux-zen
     linux-zen-headers
     linux-firmware
     lzop
