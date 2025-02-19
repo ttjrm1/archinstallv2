@@ -19,7 +19,9 @@ take_post_install_snapshot () {
 
 install_extra_pkgs () {
     paru -S --noconfirm grub-btrfs-git
-    
+    paru -S --noconfirm  mkinitcpio-numlock
+    sudo mkinitcpio -P
+    sudo grub-mkconfig -o /boot/grub/grub.cfg
 }
 
 sudo pacman -Syy
