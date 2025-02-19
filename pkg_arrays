@@ -4,9 +4,8 @@ basepkgs=(
     base-devel
     devtools
     intel-ucode
-    linux
     linux-zen
-    linux-headers
+    linux-zen-headers
     linux-firmware
     lzop
     sudo
@@ -169,6 +168,7 @@ pkg_tots=(
     sndpkgs_tot
     miscpkgs_tot
     gpupks_tot
+    hyprpkgs_tot
 )
 
 pkg_arrays=(
@@ -182,7 +182,8 @@ pkg_arrays=(
     sndpkgs
     miscpkgs
     gpupkgs
+    hyprpkgs
 )
 
-pkgs_tot=$((${basepkgs_tot}+${bootpkgs_tot}+${filepkgs_tot}+${snappkgs_tot}+${manpkgs_tot}+${xdgpkgs_tot}+${netpkgs_tot}+${sndpkgs_tot}+${miscpkgs_tot}+${gpupkgs_tot}))
+pkgs_tot=$((${basepkgs_tot}+${bootpkgs_tot}+${filepkgs_tot}+${snappkgs_tot}+${manpkgs_tot}+${xdgpkgs_tot}+${netpkgs_tot}+${sndpkgs_tot}+${miscpkgs_tot}+${gpupkgs_tot}+${hyprpkgs_tot}))
 
