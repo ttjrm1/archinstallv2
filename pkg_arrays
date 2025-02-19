@@ -1,7 +1,32 @@
 base1=$(pacman -Sqg base | sed 's/^linux$/&-zen/')
 # Base
 basepkgs=(
-    base1
+    archlinux-keyring
+    bash
+    bzip2
+    coreutils
+    file
+    filesystem
+    findutils
+    gawk
+    gcc-libs
+    gettext
+    glibc
+    grep
+    gzip
+    iproute2
+    iputils
+    licenses
+    pacman
+    pciutils
+    procps-ng
+    psmisc
+    sed
+    shadow
+    systemd
+    systemd-sysvcompat
+    tar
+    util-linux 
     base-devel
     devtools
     intel-ucode
