@@ -1,4 +1,3 @@
-base1=$(pacman -Sqg base | sed 's/^linux$/&-zen/')
 # Base
 basepkgs=(
     archlinux-keyring
