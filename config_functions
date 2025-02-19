@@ -22,7 +22,7 @@ configure_base () {
     ## Configure /etc/mkinitcpio.conf for ZSTD compression
     ##
     sed -i 's/#COMPRESSION="zstd"/COMPRESSION="zstd"/g' /mnt/etc/mkinitcpio.conf
-    sed -i 's/^MODULES=.*/MODULES=(btrfs vfio_pci vfio vfio_iommu_type1 amdgpu)/g' /mnt/etc/mkinitcpio.conf
+    sed -i 's/^MODULES=.*/MODULES=(btrfs vfio_pci vfio vfio_iommu_type1)/g' /mnt/etc/mkinitcpio.conf
     sed -i 's/^HOOKS=.*/HOOKS=(base systemd autodetect microcode modconf consolefont keymap keyboard sd-vconsole block)/g' /mnt/etc/mkinitcpio.conf
 
     ##
@@ -57,16 +57,17 @@ configure_base () {
     sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet"/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet intel_iommu=on iommu=pt"/g' /mnt/etc/default/grub
 
     # Configure GPU drivers
-    cat > /mnt/etc/modprobe.d/vfio.conf << EOF
-    options vfio-pci ids=10de:2182,10de:1aeb,10de:1aec,10de:1aed
+cat > /mnt/etc/modprobe.d/vfio.conf << EOF
+options vfio-pci ids=10de:2182,10de:1aeb,10de:1aec,10de:1aed
 EOF
 
     # Force amdgpu driver over radeon
-    cat > /mnt/etc/modprobe.d/radeon.conf << EOF
-    options radeon si_support=0
+cat > /mnt/etc/modprobe.d/radeon.conf << EOF
+options radeon si_support=0
 EOF
-    cat > /mnt/etc/modprobe.d/amdgpu.conf << EOF
-    options radeon si_support=1
+
+cat > /mnt/etc/modprobe.d/amdgpu.conf << EOF
+options radeon si_support=1
 EOF
 
     ## Disable root subvol pinning
@@ -87,60 +88,60 @@ configure_chroot () {
     mkdir /mnt/install
 
     # Create configure file to run from within chroot
-    cat > /mnt/install/config.sh << EOF
-    #!/bin/bash
+cat > /mnt/install/config.sh << EOF
+#!/bin/bash
 
-    # Setting up timezone
-    # Temporarily hardcoding here
+# Setting up timezone
+# Temporarily hardcoding here
 
-    ln -sf /usr/share/zoneinfo/$zoneinfo /etc/localtime
+ln -sf /usr/share/zoneinfo/$zoneinfo /etc/localtime
 
-    # Setting up clock
-    hwclock --systohc
+# Setting up clock
+hwclock --systohc
 
-    # Generating locales
-    locale-gen
+# Generating locales
+locale-gen
 
-    # Generating a new initramfs
-    # chmod 600 /boot/initramfs-linux*
-    mkinitcpio -P
+# Generating a new initramfs
+# chmod 600 /boot/initramfs-linux*
+mkinitcpio -P
 
-    # Installing GRUB
-    grub-install --target=x86_64-efi --efi-directory=/efi --bootloader-id=Arch_GRUB --disable-shim-lock --modules='normal test efi_gop efi_uga search echo linux all_video gfxmenu gfxterm_menu gfxterm loadenv configfile gzio part_gpt btrfs'
+# Installing GRUB
+grub-install --target=x86_64-efi --efi-directory=/efi --bootloader-id=Arch_GRUB --disable-shim-lock --modules='normal test efi_gop efi_uga search echo linux all_video gfxmenu gfxterm_menu gfxterm loadenv configfile gzio part_gpt btrfs'
 
-    # Creating grub config file
-    grub-mkconfig -o /boot/grub/grub.cfg
+# Creating grub config file
+grub-mkconfig -o /boot/grub/grub.cfg
 
-    # Adding user with sudo privilege
-    useradd -c '"$fullname"' -m "$username"
-    usermod -aG wheel "$username"
+# Adding user with sudo privilege
+useradd -c '"$fullname"' -m "$username"
+usermod -aG wheel "$username"
 
-    ## Give wheel user sudo access.
-    sed -i 's/# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/g' /etc/sudoers
+## Give wheel user sudo access.
+sed -i 's/# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/g' /etc/sudoers
 
-    # Snapper configuration
-    umount /.snapshots
-    rm -r /.snapshots
-    snapper --no-dbus -c root create-config /
-    btrfs subvolume delete /.snapshots
-    mkdir /.snapshots
-    mount -a
-    chmod 750 /.snapshots
+# Snapper configuration
+umount /.snapshots
+rm -r /.snapshots
+snapper --no-dbus -c root create-config /
+btrfs subvolume delete /.snapshots
+mkdir /.snapshots
+mount -a
+chmod 750 /.snapshots
 
-    # Configure snapper root config for cleanups
-    sed -i 's@QGROUP=""@QGROUP="1/0"@g' /etc/snapper/configs/root
-    sed -i 's/NUMBER_LIMIT="50"/NUMBER_LIMIT="10-35"/g' /etc/snapper/configs/root
-    sed -i 's/NUMBER_LIMIT_IMPORTANT="50"/NUMBER_LIMIT_IMPORTANT="15-25"/g' /etc/snapper/configs/root
-    sed -i 's/TIMELINE_LIMIT_HOURLY="10"/TIMELINE_LIMIT_HOURLY="5"/g' /etc/snapper/configs/root
-    sed -i 's/TIMELINE_LIMIT_DAILY="10"/TIMELINE_LIMIT_DAILY="5"/g' /etc/snapper/configs/root
-    sed -i 's/TIMELINE_LIMIT_WEEKLY="0"/TIMELINE_LIMIT_WEEKLY="2"/g' /etc/snapper/configs/root
-    sed -i 's/TIMELINE_LIMIT_MONTHLY="10"/TIMELINE_LIMIT_MONTHLY="3"/g' /etc/snapper/configs/root
-    sed -i 's/TIMELINE_LIMIT_YEARLY="10"/TIMELINE_LIMIT_YEARLY="0"/g' /etc/snapper/configs/root
+# Configure snapper root config for cleanups
+sed -i 's@QGROUP=""@QGROUP="1/0"@g' /etc/snapper/configs/root
+sed -i 's/NUMBER_LIMIT="50"/NUMBER_LIMIT="10-35"/g' /etc/snapper/configs/root
+sed -i 's/NUMBER_LIMIT_IMPORTANT="50"/NUMBER_LIMIT_IMPORTANT="15-25"/g' /etc/snapper/configs/root
+sed -i 's/TIMELINE_LIMIT_HOURLY="10"/TIMELINE_LIMIT_HOURLY="5"/g' /etc/snapper/configs/root
+sed -i 's/TIMELINE_LIMIT_DAILY="10"/TIMELINE_LIMIT_DAILY="5"/g' /etc/snapper/configs/root
+sed -i 's/TIMELINE_LIMIT_WEEKLY="0"/TIMELINE_LIMIT_WEEKLY="2"/g' /etc/snapper/configs/root
+sed -i 's/TIMELINE_LIMIT_MONTHLY="10"/TIMELINE_LIMIT_MONTHLY="3"/g' /etc/snapper/configs/root
+sed -i 's/TIMELINE_LIMIT_YEARLY="10"/TIMELINE_LIMIT_YEARLY="0"/g' /etc/snapper/configs/root
 
-    # Enable the Multilib repo
-    sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
+# Enable the Multilib repo
+sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
 
-    exit
+exit
 EOF
 
     chmod +x /mnt/install/config.sh
