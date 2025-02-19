@@ -51,7 +51,6 @@ bootpkgs_tot=$(echo -n "${bootpkgs[@]}" | wc -w)
 # Files
 filepkgs=(
   acpi
-  acpi_call
   acpid
   avahi
   bash-completion
