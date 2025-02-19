@@ -64,7 +64,7 @@ options radeon si_support=0
 EOF
 
 cat > /mnt/etc/modprobe.d/amdgpu.conf << EOF
-options radeon si_support=1
+options amdgpu si_support=1
 EOF
 
     ## Disable root subvol pinning
