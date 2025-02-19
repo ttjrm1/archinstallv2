@@ -54,7 +54,7 @@ configure_base () {
     GRUB_BTRFS_OVERRIDE_BOOT_PARTITION_DETECTION=true' >> /mnt/etc/default/grub
 
     # Additional grub cmdline options
-    sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet"/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet intel_iommu=on iommu=pt"/g' /mnt/etc/default/grub
+    sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet"/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet intel_iommu=on iommu=pt pcie_acs_override=downstream,multifunction"/g' /mnt/etc/default/grub
 
     # Configure GPU drivers
 cat > /mnt/etc/modprobe.d/vfio.conf << EOF
