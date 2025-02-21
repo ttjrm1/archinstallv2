@@ -29,6 +29,7 @@ install_extra_pkgs () {
     yay --noconfirm  mkinitcpio-numlock
     sudo mkinitcpio -P
     sudo grub-mkconfig -o /boot/grub/grub.cfg
+    yay --noconfirm python-pywalfox
 }
 
 additional_wallpapers () {   
