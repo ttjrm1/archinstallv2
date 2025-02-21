@@ -31,7 +31,14 @@ install_extra_pkgs () {
     sudo grub-mkconfig -o /boot/grub/grub.cfg
 }
 
+additional_wallpapers () {   
+    cd ~/Pictures
+    git clone https://github.com/JaKooLit/Wallpaper-Bank.git Wallpaper-1
+    git clone --depth=1 https://github.com/mylinuxforwork/wallpaper.git Wallpaper-2
+}
+
 sudo pacman -Syy
 install_yay
 install_extra_pkgs
+additional_wallpapers
 take_post_install_snapshot
