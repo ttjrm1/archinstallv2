@@ -13,7 +13,7 @@ install_paru () {
     makepkg -si
 }
 
-install yay () {
+install_yay () {
     mkdir AUR && cd AUR
     git clone https://aur.archlinux.org/yay.git
     cd yay
