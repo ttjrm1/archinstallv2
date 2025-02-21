@@ -1,5 +1,5 @@
-# Base
-basepkgs=(
+# Individual packages from base without linux
+base1pkg(
     archlinux-keyring
     bash
     bzip2
@@ -26,6 +26,11 @@ basepkgs=(
     systemd-sysvcompat
     tar
     util-linux 
+)
+
+# Base
+basepkgs=(
+    base
     base-devel
     devtools
     intel-ucode
