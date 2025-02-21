@@ -8,7 +8,8 @@ sys_prep () {
     clear
     printf "\n${grn}Please wait whilst the necessary packages are installed,"
     printf "\nand the repositories are refreshed......................${none}"
-    sys_update > /dev/null 2&>1
+    sys_update 
+#> /dev/null 2&>1
 }
 
 # Call the filesystem creation function
