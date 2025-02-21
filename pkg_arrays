@@ -1,5 +1,5 @@
 # Individual packages from base without linux
-base1pkg(
+base1pkg (
     archlinux-keyring
     bash
     bzip2
