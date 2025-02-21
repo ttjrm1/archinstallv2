@@ -151,7 +151,7 @@ echo '[chaotic-aur]
 Include = /etc/pacman.d/chaotic-mirrorlist' >> /etc/pacman.conf
 
 # Update Pacman and update using all repos
-pacman -Syu --noconfirm
+#pacman -Syu --noconfirm
 
 exit
 EOF
