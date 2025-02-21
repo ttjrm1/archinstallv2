@@ -38,11 +38,12 @@ additional_wallpapers () {
     git clone --depth=1 https://github.com/mylinuxforwork/wallpaper.git Wallpaper-2
 }
 
-install_sddm_theme (){
+install_sddm_theme () {
     cd ~/PKG
     git clone https://codeberg.org/minMelody/sddm-sequoia.git ~/sequoia && rm -rf ~/sequoia/.git
     sudo mv ~/sequoia /usr/share/sddm/themes/
     sudo sed 's/Current=/Current=sequoia/g' /etc/sddm.confd/sddm.conf
+}
     
 
 sudo pacman -Syy
