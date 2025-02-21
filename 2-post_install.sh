@@ -13,6 +13,13 @@ install_paru () {
     makepkg -si
 }
 
+install yay () {
+    mkdir AUR && cd AUR
+    git clone https://aur.archlinux.org/yay.git
+    cd yay
+    makepkg -si
+}
+
 take_post_install_snapshot () {
    sudo snapper -v -c root create -t single -d "Post Clean Install Snapshot"
 }
@@ -25,6 +32,6 @@ install_extra_pkgs () {
 }
 
 sudo pacman -Syy
-install_paru
+install_yay
 install_extra_pkgs
 take_post_install_snapshot
