@@ -103,7 +103,7 @@ manpkgs_tot=$(echo -n "${manpkgs[@]}" | wc -w)
 xdgpkgs=(
   xdg-desktop-portal-wlr
   xdg-desktop-portal-gtk
-  xdg-desktop-portal-hyprland
+  xdg-desktop-portal-hyprland-git
   xdg-user-dirs
   xdg-utils
 )
@@ -167,11 +167,11 @@ gpupkgs_tot=$(echo -n "${gpupkgs[@]}" | wc -w)
 
 # Hyprland
 hyprpkgs=(
-  hyprland
-  hyprpaper
+  hyprland-git
+  hyprpaper-git
   qt5-wayland
   qt6-wayland
-  wofi
+  rofi-wayland
   swaync
   kitty
   grim
@@ -179,8 +179,12 @@ hyprpkgs=(
   polkit-kde-agent
   ttf-font-awesome
   hyprlock
-  waybar
-  pywal
+  hypridle-git
+  hyprsysteminfo
+  hyprshot
+  waybar-git
+  waybar-module-pacman-updates-git
+  python-pywal16
   firefox
   nautilus
 )
