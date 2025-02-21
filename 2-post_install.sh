@@ -6,15 +6,15 @@
 ##
 
 install_paru () {
-    mkdir AUR
-    cd AUR
+    mkdir PKG
+    cd PKG
     git clone https://aur.archlinux.org/paru.git
     cd paru
     makepkg -si
 }
 
 install_yay () {
-    mkdir AUR && cd AUR
+    mkdir PKG && cd PKG
     git clone https://aur.archlinux.org/yay.git
     cd yay
     makepkg -si
@@ -37,6 +37,13 @@ additional_wallpapers () {
     git clone https://github.com/JaKooLit/Wallpaper-Bank.git Wallpaper-1
     git clone --depth=1 https://github.com/mylinuxforwork/wallpaper.git Wallpaper-2
 }
+
+install_sddm_theme (){
+    cd ~/PKG
+    git clone https://codeberg.org/minMelody/sddm-sequoia.git ~/sequoia && rm -rf ~/sequoia/.git
+    sudo mv ~/sequoia /usr/share/sddm/themes/
+    sudo sed 's/Current=/Current=sequoia/g' /etc/sddm.confd/sddm.conf
+    
 
 sudo pacman -Syy
 install_yay
