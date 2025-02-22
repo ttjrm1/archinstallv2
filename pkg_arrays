@@ -187,6 +187,7 @@ hyprpkgs=(
   python-pywal16
   firefox
   nautilus
+  waypaper
 )
 
 hyprpkgs_tot=$(echo -n "${hyprpkgs[@]}" | wc -w)
