@@ -213,7 +213,6 @@ pkg_arrays=(
     sndpkgs
     miscpkgs
     gpupkgs
-    hyprpkgs
 )
 
 pkgs_tot=$((${basepkgs_tot}+${bootpkgs_tot}+${filepkgs_tot}+${snappkgs_tot}+${manpkgs_tot}+${xdgpkgs_tot}+${netpkgs_tot}+${sndpkgs_tot}+${miscpkgs_tot}+${gpupkgs_tot}+${hyprpkgs_tot}))
