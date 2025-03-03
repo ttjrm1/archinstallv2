@@ -20,8 +20,8 @@ install_yay () {
     makepkg -si
 }
 
-take_post_install_snapshot () {
-   sudo snapper -v -c root create -t single -d "Post Clean Install Snapshot"
+take_snapshot () {
+   sudo snapper -v -c root create -t single -d "$1"
 }
 
 install_extra_pkgs () {
@@ -44,10 +44,15 @@ install_sddm_theme () {
     sudo mv ~/sequoia /usr/share/sddm/themes/
     sudo sed 's/Current=/Current=sequoia/g' /etc/sddm.confd/sddm.conf
 }
-    
+
+install _ml4w () {
+    bash <(curl -s https://raw.githubusercontent.com/mylinuxforwork/dotfiles/main/setup-arch.sh)
+}
 
 sudo pacman -Syy
 install_yay
 install_extra_pkgs
 additional_wallpapers
-take_post_install_snapshot
+take_snapshot "Post Clean Install Snapshot"
+install_ml4w
+take_snapshot "Post Ml4W Install Snapshot"
