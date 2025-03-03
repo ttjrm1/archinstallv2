@@ -60,7 +60,7 @@ create_fs () {
     mkdir /mnt/@/var/lib
     btrfs su cr /mnt/@/var/lib/libvirt_images
     btrfs su cr /mnt/@/var/lib/machines
-    if [[ ! -z ${part_vms} ]] ; then
+    if [[ ! -z ${part_vm} ]] ; then
         mkdir -p /mnt/vm
     fi
 
@@ -126,7 +126,7 @@ mount_fs () {
 
     # Mount the ESP and VM partition (if specified)
     mount -o nodev,nosuid,noexec "${ESP}" /mnt/efi
-    if [[ ! -z ${part_vms} ]]; then
+    if [[ ! -z ${part_vm} ]]; then
         mount -o ssd,noatime "${VM}" /mnt/vm
     fi
 }
