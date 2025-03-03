@@ -84,7 +84,6 @@ filepkgs_tot=$(echo -n "${filepkgs[@]}" | wc -w)
 # Snap snap-pac
 snappkgs=(
   snapper
-  snapper-support
 )
 
 snappkgs_tot=$(echo -n "${snappkgs[@]}" | wc -w)
