@@ -35,7 +35,6 @@ basepkgs=(
     devtools
     intel-ucode
     linux-zen
-    linux-headers
     linux-zen-headers
     linux-firmware
     lzop
@@ -101,9 +100,8 @@ manpkgs_tot=$(echo -n "${manpkgs[@]}" | wc -w)
 
 # Xdg
 xdgpkgs=(
-  xdg-desktop-portal-wlr
   xdg-desktop-portal-gtk
-  xdg-desktop-portal-hyprland-git
+  xdg-desktop-portal-hyprland
   xdg-user-dirs
   xdg-utils
 )
@@ -203,7 +201,6 @@ pkg_tots=(
     sndpkgs_tot
     miscpkgs_tot
     gpupks_tot
-    hyprpkgs_tot
 )
 
 pkg_arrays=(
