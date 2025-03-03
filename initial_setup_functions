@@ -134,8 +134,7 @@ mount_fs () {
 
 func_inst_ind () {
     draw_prog_bars "$2" $current_completed $current_task_tot $completed $total_num_tasks
-    $1 
-    #> /dev/null 2>&1 &
+    $1 > /dev/null 2>&1 &
     funcid=$!
     func=$1
     while [ -d /proc/$funcid ]; do
@@ -176,8 +175,7 @@ install_base () {
 
 pkg_inst_ind () {
 
-    pacstrap /mnt > /dev/null 2>&1
-    #2> /mnt/$1_error &
+    pacstrap /mnt > /dev/null 2>&1 &
     funcid=$!
     pkgname=$1
     while [[ -d /proc/$funcid ]] ; do
