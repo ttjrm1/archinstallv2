@@ -78,8 +78,8 @@ create_fs () {
     btrfs subvolume set-default "$(btrfs subvolume list /mnt | grep "@/.snapshots/1/snapshot" | grep -oP '(?<=ID )[0-9]+')" /mnt
 
     # Enable btrfs quota
-    btrfs quota enable /mnt
-    btrfs qgroup create 1/0 /mnt
+    # btrfs quota enable /mnt
+    # btrfs qgroup create 1/0 /mnt
 
     # Disable CoW on subvolumes not having snapshots taken
     # chattr +C /mnt/@/boot
