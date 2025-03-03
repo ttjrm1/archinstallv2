@@ -42,7 +42,7 @@ create_fs () {
     btrfs su cr /mnt/@/.snapshots
     mkdir -p /mnt/@/.snapshots/1
     btrfs su cr /mnt/@/.snapshots/1/snapshot
-    mkdir -p /mnt/@/boot
+    #mkdir -p /mnt/@/boot
     btrfs su cr /mnt/@/boot
     btrfs su cr /mnt/@/home
     # btrfs su cr /mnt/@/opt
@@ -95,8 +95,7 @@ create_fs () {
     chattr +C /mnt/@/var/lib/machines
 
     # Un-mount the BTRFS top-level volume
-    umount /mnt## Add progress bar redraw
-
+    umount /mnt
 }
 
 # Mount the newly created Initial snapshot and the required sub-volumes
@@ -110,7 +109,7 @@ mount_fs () {
 
     # Mount the required sub-volumes
     mount -o ssd,noatime,compress-force=zstd,autodefrag,subvol=@/.snapshots "${BTRFS}" /mnt/.snapshots
-    mount -o ssd,noatime,compress-force=zstd,autodefrag,nodev,nosuid,noexec,subvol=@/boot/grub "${BTRFS}" /mnt/boot/grub
+    mount -o ssd,noatime,compress-force=zstd,autodefrag,nodev,nosuid,noexec,subvol=@/boot "${BTRFS}" /mnt/boot
     mount -o ssd,noatime,compress-force=zstd,autodefrag,nodev,nosuid,subvol=@/root "${BTRFS}" /mnt/root
     mount -o ssd,noatime,compress-force=zstd,autodefrag,nodev,nosuid,subvol=@/home "${BTRFS}" /mnt/home
     mount -o ssd,noatime,compress-force=zstd,autodefrag,subvol=@/srv "${BTRFS}" /mnt/srv
