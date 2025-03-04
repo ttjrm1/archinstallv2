@@ -25,11 +25,11 @@ take_snapshot () {
 }
 
 install_extra_pkgs () {
-#   yay --noconfirm grub-btrfs-git
+    yay --noconfirm grub-btrfs-git
     yay --noconfirm  mkinitcpio-numlock
     sudo mkinitcpio -P
-    # sudo grub-mkconfig -o /boot/grub/grub.cfg
-    yay --noconfirm python-pywalfox
+    sudo grub-mkconfig -o /boot/grub/grub.cfg
+    #yay --noconfirm python-pywalfox
 }
 
 additional_wallpapers () {   
