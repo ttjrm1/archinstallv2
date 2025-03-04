@@ -45,7 +45,7 @@ install_sddm_theme () {
     sudo sed 's/Current=/Current=sequoia/g' /etc/sddm.confd/sddm.conf
 }
 
-install _ml4w () {
+install_ml4w () {
     bash <(curl -s https://raw.githubusercontent.com/mylinuxforwork/dotfiles/main/setup-arch.sh)
 }
 
