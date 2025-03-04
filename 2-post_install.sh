@@ -55,4 +55,4 @@ install_extra_pkgs
 additional_wallpapers
 take_snapshot "Post Clean Install Snapshot"
 install_ml4w
-take_snapshot "Post Ml4W Install Snapshot"
+take_snapshot "Post ML4W Install Snapshot"
