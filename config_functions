@@ -57,9 +57,9 @@ configure_base () {
     sed -i 's/GRUB_DEFAULT=0/GRUB_DEFAULT="1>0"/g' /mnt/etc/default/grub
 
     # Configure GPU drivers and Isolate NVIDIA graphics for GPU passsthrough
-cat > /mnt/etc/modprobe.d/vfio.conf << EOF
-options vfio-pci ids=10de:2182,10de:1aeb,10de:1aec,10de:1aed
-EOF
+#cat > /mnt/etc/modprobe.d/vfio.conf << EOF
+#options vfio-pci ids=10de:2182,10de:1aeb,10de:1aec,10de:1aed
+#EOF
 
     # Force amdgpu driver over radeon
 cat > /mnt/etc/modprobe.d/radeon.conf << EOF
