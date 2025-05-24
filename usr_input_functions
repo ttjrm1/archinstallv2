@@ -54,6 +54,7 @@ partition () {
 
     ESP=${dev}/${part_efi}
     BTRFS=${dev}/${part_root}
+    #HOME=${dev}/${part_home}
     VM=${dev}/${part_vm}
 
     if [ -z $part_efi} ] || [ -z ${part_root} ]; then
