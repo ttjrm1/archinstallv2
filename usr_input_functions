@@ -29,6 +29,7 @@ partition () {
             dev="/dev"
             read -e -p "$(echo -e "${ylw}Please enter the EFI partition: ${none}")" part_efi
             read -e -p "$(echo -e "${ylw}Please enter the ROOT partition: ${none}")" part_root
+            #read -e -p "$(echo -e "${ylw}Please enter the ROOT partition: ${none}")" part_home
             read -e -p "$(echo -e "${ylw}Please enter the VM partition: ${none}")" part_vm
             ;;
         2)
